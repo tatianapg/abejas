@@ -1,0 +1,423 @@
+/*
+TG: archivo que está tomando para aplicar estilos
+'Raleway',
+*/
+/* ===========================
+   ======= Body style ======== 
+   =========================== */
+
+body {
+background-color: #fafafa;
+font-family: Arial, sans-serif;
+}
+body{
+margin:0;
+}
+
+#header {
+background-color: #0E92C3;
+padding:2px;
+border-bottom: 5px solid #0E92C3;
+margin-bottom: 0px;
+}
+
+#header .top-header {
+padding-top: 20px;
+border-bottom: 4px solid #0c6eb6;
+padding-bottom: 10px;
+}
+.logo img {
+margin-left: 15%;
+}
+.sidebar-page{
+border: 10px solid #e2e2e2;
+}
+.sidebar-page{
+border: 1px solid #e2e2e2;
+background-color: #ffffff;
+-webkit-border-radius: 3px;
+-moz-border-radius: 3px;
+border-radius: 3px;
+margin-right: 1px;
+margin-bottom: 10px;
+margin-left:150px;
+margin-top:1px;
+width:300px;
+}
+.sidebar-page .sidebar-title {
+display: block;
+border-bottom: 1px solid #e2e2e2;
+font-size: 20px;
+padding: 15px 16px 13px 6px;
+}
+.sidebar-page ul{
+padding: 0;
+list-style-type: none;
+height:343px;
+margin-top:-4px;
+}
+
+.sidebar-page ul li a {
+font-size: 17px;
+color: #3D3D3D;
+padding: 14px 16px 10px 16px;
+border-bottom: 1px solid #e2e2e2;
+display: block;
+}
+.sidebar-page ul li a:hover,.sidebar-page ul li a.current{
+background-color: #0e7ac4;
+color: #fff;
+}
+.sidebar-page ul li .glyphicon{
+font-size: 16px;
+color:#1473b3;
+margin-right: 18px;
+}
+.sidebar-page ul li a:hover .glyphicon{
+color:#fff;
+}
+a {
+text-decoration: none !important;
+
+}
+.sidebar-page .textwidget{
+font-size: 17px;
+padding: 18px 19px 22px 19px;
+line-height: 1.6em;
+color: #0d0d0d;
+}
+#sidebar img {
+max-width: 100%;
+height: auto;
+margin-left:150px;
+}
+#footer_bottom {
+background-color: #0e639d;
+padding-top: 13px;
+padding-bottom: 17px;
+margin-top:70px;
+}
+#footer_bottom .copyright {
+text-align: center;
+font-size: 16px;
+color: #81ccff;
+}
+#footer_bottom .copyright a {
+color: #fff;
+font-size: 19px;
+}
+.blog{
+width:700px;
+height:600px;
+border:1px solid #e2e2e2;
+float:right;
+margin-right:300px;
+background-color:white;
+}
+#blog_text{
+padding: 10px;
+}
+
+
+/*
+adiciones para formas
+*/
+input {
+	padding: 5px;
+	border: 1px solid #E9E9E9;
+	width: 200px;
+	color: #151617;
+	box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;
+	-moz-box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;
+	-webkit-box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;		
+	font-family: Arial, sans-serif;
+}
+
+
+
+textarea {
+	width: 600px;
+	height: 60px;
+	max-width: 600px;
+	line-height: 20px;
+	font-family: Arial, sans-serif;
+	font-size: 14px;
+}
+
+.cajaLarga {
+	padding: 5px;
+	border: 1px solid #E9E9E9;
+	width: 180px;
+	color: #151617;
+	box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;
+	-moz-box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;
+	-webkit-box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;		
+	height: 25px;	
+}
+
+.cajaCorta {
+	padding: 5px;
+	border: 1px solid #E9E9E9;
+	width: 90px;
+	color: #151617;
+	box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;
+	-moz-box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;
+	-webkit-box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;		
+	height: 25px;	
+}
+
+.cajaExtraLarga {
+	padding: 5px;
+	border: 1px solid #E9E9E9;
+	width: 600px;
+	color: #151617;
+	box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;
+	-moz-box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;
+	-webkit-box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;		
+	height: 25px;	
+}
+
+
+/*caja para números*/
+.cajaCortaNumeros {
+	padding: 5px;
+	border: 1px solid #E9E9E9;
+	width: 45px;
+	color: #151617;
+	box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;
+	-moz-box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;
+	-webkit-box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;		
+	height: 25px;	
+}
+
+
+.combo {
+	padding: 5px;
+	border: 1px solid #E9E9E9;
+	/*width: 120px;*/
+	color: #151617;
+	box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;
+	-moz-box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;
+	-webkit-box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;		
+	height: 27px;	
+}
+
+
+.etiqueta {
+font-size: 14px;
+color: #3D3D3D;
+padding: 6px 10px 5px 6px;
+display: block;
+}
+
+.subtitulo {
+font-size: 14px;
+font-weight: bold;
+font-weight: 900;
+color: #000000;
+padding: 6px 10px 5px 6px;
+display: block;
+}
+
+
+/*
+border-bottom: 0px solid #e2e2e2;
+
+*/
+
+.submit input {
+	width: 100px; 
+	height: 40px;
+	background-color: #151617; 
+	color: #151617;
+	border-radius: 5px;
+	text-align: left;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;		
+}
+
+
+/*
+Formateo para divs 
+*/
+
+#marco {
+  display: flex;
+  background: lightblue;
+
+}
+#ladoIzquierdo {
+  width: 200px;
+  background: lightblue;
+  /* Just so it's visible */
+}
+#ladoDerecho {
+  flex: 1;
+  /* Grow to rest of container */
+  background: lightblue;
+  /* Just so it's visible */
+}
+
+
+/*
+Formateo para menu izquierdo
+*/
+body { background: #FFF;}
+
+/*
+.wrap{width: 100%;max-width: 300px;margin:20px auto;}
+*/
+.goo-collapsible{list-style: none;font-family: Arial, Helvetica, sans-serif;font-size:14px}
+.goo-collapsible li.header{color: #666; padding:4px 12px;border: 1px solid #bbb;}
+.goo-collapsible li { border: 1px solid #bbb;border-top:0; margin: 0;background:#F0F0F0;}
+.goo-collapsible li a {  text-decoration:none; color:#666;display:block; padding:8px 12px;}
+.goo-collapsible li a:hover {background: #F8F8F8; text-decoration:none;}
+.goo-collapsible li ul { list-style: none; background: #d3d3d3; display: none; margin:0;padding:0;}
+.goo-collapsible li ul li { margin:0; border:0; border-bottom:1px solid #bbb;}
+.goo-collapsible li ul li:last-child {border-bottom:0;}
+.goo-collapsible li ul li a { padding: 5px 10px; display: block; padding-left: 33px;background: #d3d3d3; }
+.goo-collapsible li ul li a:hover { background: #d9d9d9; }
+.goo-collapsible .dropdown > a { background: url(./images/arrowdown.png) no-repeat right center; }
+.goo-collapsible .dropdown > a:hover { background: #F8F8F8 url(./images/arrowdown.png) no-repeat right center !important; }
+
+
+/* para el caudro de login*/
+
+/*
+#marcoLogin div {
+	margin: auto;
+	position: absolute;
+    width: 50%;
+    border: 3px solid green;
+    padding: 10px;	
+ top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);	
+    align-items: center;
+}
+*/
+
+
+
+#marcoLogin fieldset
+{
+   width: 250px;
+   padding:20px;
+   border:1px solid #ccc;
+   margin: auto;
+   --position: absolute;
+-moz-border-radius: 10px;
+-webkit-border-radius: 10px;
+-khtml-border-radius: 10px;
+border-radius: 10px;   
+}
+
+legend {
+   font-family : Arial, sans-serif;
+   font-size: 1em; /*1.3 1.1*/
+   font-weight:bold;
+   color:#333;
+}
+
+div .error
+{
+   font-family: Verdana, Arial, sans-serif; 
+   font-size: 0.7em;
+   color: #EE6F53; /* #900 */
+   background-color : #ffff00;
+}
+
+
+
+#marcoLogin legend, #marcoLogin h2
+{
+   font-family : Arial, sans-serif;
+   font-size: 1.3em; /*1.3*/
+   font-weight:bold;
+   color:#333;
+}
+
+#marcoLogin .explicacionCorta
+{
+   font-family : Arial, sans-serif;
+   font-size: 0.9em;
+   color:#333;   
+}
+
+#marcoLogin .error
+{
+   font-family: Verdana, Arial, sans-serif; 
+   font-size: 0.7em;
+   color: #EE6F53; /* #900 */
+   background-color : #ffff00;
+}
+
+#marcoLogin .contenedor
+{
+   margin-top:8px;
+   margin-bottom: 10px;
+}
+
+#marcoLogin .contenedorCentrado
+{
+   margin-top:8px;
+   margin-bottom: 10px;
+}
+
+
+#marcoLogin fieldset, #antispam legend
+{
+   font-family : Arial, sans-serif;
+   font-size: 1.0em;
+   font-weight:bold;
+   color:#333;   
+}
+
+#marcoLogin label
+{
+   font-family : Arial, sans-serif;
+   font-size:0.9em;
+   font-weight: bold;
+}
+
+#marcoLogin input[type="text"],
+#marcoLogin input[type="password"]
+{
+  height:18px;
+  width:220px;
+}
+
+#marcoLogin input[type="submit"]
+{
+   width:100px;
+   height:30px;
+   /*padding-left:0px;*/
+}
+
+
+#marcoLogin textarea
+{
+  height:120px;
+  width:310px;
+}
+
+.div_izquierdo {
+  float: left;
+}
+
+.div_derecho {
+  float: left;
+  margin-left: 0px;
+}
+
+
+.checkbox {
+	padding: 5px;
+	border: 1px solid #E9E9E9;
+	width: 20px;
+	color: #151617;
+	box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;
+	-moz-box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;
+	-webkit-box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;		
+	font-family: Arial, sans-serif;
+}
