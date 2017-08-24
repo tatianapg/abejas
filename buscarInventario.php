@@ -14,7 +14,7 @@ if(!$autenticacion->CheckLogin()) {
 
 /////////////////
 	$pdo = new PdoWrapper();
-	$con = $pdo->pdoConnect("localhost", "tatianag", "Cpsr19770428", "bdd_abejas");
+	$con = $pdo->pdoConnect();
 
 	if($con) {
 		if(isset($_POST["txtAnioBuscar"])) {

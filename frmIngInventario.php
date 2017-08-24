@@ -3,6 +3,7 @@ include("./aplicacion/bdd/PdoWrapper.php");
 include("./aplicacion/controller/Controller.php");
 include("./aplicacion/model/inventario/Inventario.php");
 require_once("./include/dabejas_config.php");
+
 ?>
 
 <html>
@@ -93,9 +94,9 @@ if(!$autenticacion->CheckLogin()) {
 	$autenticacion->RedirectToURL("login.php");
     exit;
 } else {
+				
 	$pdo = new PdoWrapper();
-	$con = $pdo->pdoConnect("localhost", "tatianag", "Cpsr19770428", "bdd_abejas");
-
+	$con = $pdo->pdoConnect();
 /////
 	$etiquetaBoton = "Ingresar";
 	//es eliminación de inventario, verificar antes si se puede eliminar

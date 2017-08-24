@@ -1,6 +1,5 @@
 <?php
 include("./aplicacion/bdd/PdoWrapper.php");
-include("./include/autenticacion.php");
 require_once("./include/dabejas_config.php");
 
 //antes validar que la sesión es válida, es decir que sí se logueó.
@@ -10,13 +9,11 @@ if(!$autenticacion->CheckLogin())
     exit;
 } else {
     //con el código del usuario se pasa a obtener los menúes
-    //echo "el login en sesion es: " . $_SESSION["login_usuario"];
-    //echo "el usuario en sesion es: " . $_SESSION["cd_usuario"];
     $cdUsuario = (isset($_SESSION['cd_usuario']) ? $_SESSION['cd_usuario'] : 0);
     
     //hace consulta de los elementos a los que tiene acceso:
     $pdo = new PdoWrapper();
-    $con = $pdo->pdoConnect("localhost", "tatianag", "Cpsr19770428", "bdd_seguridades");
+    $con = $pdo->pdoConnect();
                          
     if($con) {
         //obtener la consulta de los permisos

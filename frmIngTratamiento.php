@@ -2,6 +2,8 @@
 include("./aplicacion/bdd/PdoWrapper.php");
 include("./aplicacion/controller/Controller.php");
 include("./aplicacion/model/tratamiento/Tratamiento.php");
+require_once("./include/dabejas_config.php");
+
 ?>
 <html>
 <head>
@@ -51,80 +53,84 @@ include("./aplicacion/model/tratamiento/Tratamiento.php");
 </head>
 <body>
 <?php
-//incluir una librería para ingresar
-//set configuración local
-$pdo = new PdoWrapper();
-$con = $pdo->pdoConnect("localhost", "tatianag", "Cpsr19770428", "bdd_abejas");
 
-$tratamiento = new Tratamiento();
-$etiquetaBoton = "Ingresar";
+if(!$autenticacion->CheckLogin()) {
+	$autenticacion->RedirectToURL("login.php");
+    exit;
+} else {
 
-if(isset($_GET["cdtra"])) {
-	$etiquetaBoton = "Modificar";
-    //echo "existe tratamiento";
-    $sql = $tratamiento->consultarTratamientoPorCd($_GET["cdtra"]);        
-    
-    if($con) {
-        $fila = $pdo->pdoGetRow($sql);
-        $tratamiento->obtenerTratamiento($fila);
-    } else {
-        echo "error conexión bdd!!!";
-    }           
-}
-$habilitarBoton = "";
-if(isset($_GET["del"])) {
-	//habilitar o deshabilitar el boton
-	$etiquetaBoton = "Eliminar";
+	//incluir una librería para ingresar
+	//set configuración local
+	$pdo = new PdoWrapper();
+	$con = $pdo->pdoConnect();
+
+	$tratamiento = new Tratamiento();
+	$etiquetaBoton = "Ingresar";
+
+	if(isset($_GET["cdtra"])) {
+		$etiquetaBoton = "Modificar";
+		//echo "existe tratamiento";
+		$sql = $tratamiento->consultarTratamientoPorCd($_GET["cdtra"]);        
+		
+		if($con) {
+			$fila = $pdo->pdoGetRow($sql);
+			$tratamiento->obtenerTratamiento($fila);
+		} else {
+			echo "error conexión bdd!!!";
+		}           
+	}
 	$habilitarBoton = "";
-    //también obtener los tratamiento que tiene el paciente        
-    //verificar si se puede eliminar o no 
-	/////////////
-	$sqlNumSesiones = $tratamiento->getNumSesionesPorTratamiento();
-	$resultSesiones = $pdo->pdoGetRow($sqlNumSesiones);
-	$numSesiones = $resultSesiones["conteo"];				
-	$sqlNumMedicaciones = $tratamiento->getNumMedicacionesPorTratamiento();
-	$resultMedicaciones = $pdo->pdoGetRow($sqlNumMedicaciones);
-	$numMedicaciones = $resultMedicaciones["conteo"];
-			
-	if(($numSesiones + $numMedicaciones) > 0) {
-		$habilitarBoton="disabled";
-	} 		
+	if(isset($_GET["del"])) {
+		//habilitar o deshabilitar el boton
+		$etiquetaBoton = "Eliminar";
+		$habilitarBoton = "";
+		//también obtener los tratamiento que tiene el paciente        
+		//verificar si se puede eliminar o no 
+		/////////////
+		$sqlNumSesiones = $tratamiento->getNumSesionesPorTratamiento();
+		$resultSesiones = $pdo->pdoGetRow($sqlNumSesiones);
+		$numSesiones = $resultSesiones["conteo"];				
+		$sqlNumMedicaciones = $tratamiento->getNumMedicacionesPorTratamiento();
+		$resultMedicaciones = $pdo->pdoGetRow($sqlNumMedicaciones);
+		$numMedicaciones = $resultMedicaciones["conteo"];
+				
+		if(($numSesiones + $numMedicaciones) > 0) {
+			$habilitarBoton="disabled";
+		} 		
+	}
+
+	$cdPaciente = ( isset($_GET["cdpac"]) ? $_GET["cdpac"] : $tratamiento->getCdPaciente() );
+	 
+	/*------------------------------
+	-- para botones cuando hay una sesion
+	-------------------------------*/
+	$ocultarElementoS = "hidden";
+	$ocultarEspacioS = "none";
+	//botones del tratamiento
+	$botonOcultarElemento = "visible";
+	$botonOcultarEspacio = "block";
+
+	// zona de botones y div de medicacion
+	$ocultarElementoM = "hidden";
+	$ocultarEspacioM = "none";
+	//$botonOcultarElementoM = "visible";
+	//$botonOcultarEspacioM = "block";
+
+	if(isset($_GET["ses"])) {
+		$ocultarElementoS = "visible";
+		$ocultarEspacioS = "block";	
+		$botonOcultarElemento = "hidden";
+		$botonOcultarEspacio = "none";	
+	}
+
+	if(isset($_GET["med"])) {
+		$ocultarElementoM = "visible";
+		$ocultarEspacioM = "block";	
+		$botonOcultarElemento = "hidden";
+		$botonOcultarEspacio = "none";	
+	}
+		
 }
-
-$cdPaciente = ( isset($_GET["cdpac"]) ? $_GET["cdpac"] : $tratamiento->getCdPaciente() );
- 
-/*------------------------------
--- para botones cuando hay una sesion
--------------------------------*/
-$ocultarElementoS = "hidden";
-$ocultarEspacioS = "none";
-//botones del tratamiento
-$botonOcultarElemento = "visible";
-$botonOcultarEspacio = "block";
-
-// zona de botones y div de medicacion
-$ocultarElementoM = "hidden";
-$ocultarEspacioM = "none";
-//$botonOcultarElementoM = "visible";
-//$botonOcultarEspacioM = "block";
-
-if(isset($_GET["ses"])) {
-	$ocultarElementoS = "visible";
-	$ocultarEspacioS = "block";	
-	$botonOcultarElemento = "hidden";
-	$botonOcultarEspacio = "none";	
-}
-
-if(isset($_GET["med"])) {
-	$ocultarElementoM = "visible";
-	$ocultarEspacioM = "block";	
-	$botonOcultarElemento = "hidden";
-	$botonOcultarEspacio = "none";	
-}
-
-	
-/* --------------------*/
-
 ?>
 <div id="ladoDerecho">
 <form method="post" action="ingresarTratamiento.php" name="frmIngTratamiento" id="frmIngTratamiento">

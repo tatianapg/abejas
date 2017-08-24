@@ -150,51 +150,58 @@ include("./aplicacion/controller/Controller.php");
 include("./aplicacion/model/paciente/Paciente.php");
 include("./aplicacion/model/sucursal/Sucursal.php");
 include("./aplicacion/bdd/PdoWrapper.php");
+require_once("./include/dabejas_config.php");
 
-$etiquetaBoton = "Ingresar";
-$paciente = new Paciente();
-$pdo = new PdoWrapper();
-$con = $pdo->pdoConnect("localhost", "tatianag", "Cpsr19770428", "bdd_abejas");
+if(!$autenticacion->CheckLogin()) {
+	$autenticacion->RedirectToURL("login.php");
+    exit;
+} else {
+	$etiquetaBoton = "Ingresar";
+	$paciente = new Paciente();
+	$pdo = new PdoWrapper();
+	$con = $pdo->pdoConnect();
 
-//es modificacion de paciente
-if(isset($_GET["cdpac"]) && $_GET["cdpac"] > 0) {
-	$etiquetaBoton = "Modificar";
+	//es modificacion de paciente
+	if(isset($_GET["cdpac"]) && $_GET["cdpac"] > 0) {
+		$etiquetaBoton = "Modificar";
 
-    //echo "existe paciente";
-    $sql = $paciente->consultarPaciente($_GET["cdpac"]);        
+		//echo "existe paciente";
+		$sql = $paciente->consultarPaciente($_GET["cdpac"]);        
 
-    if($con) {
-        $fila = $pdo->pdoGetRow($sql);
-        $paciente->obtenerPaciente($fila);
-    } else {
-        echo "error conexión bdd!!!";
-    }    
-}
+		if($con) {
+			$fila = $pdo->pdoGetRow($sql);
+			$paciente->obtenerPaciente($fila);
+		} else {
+			echo "error conexión bdd!!!";
+		}    
+	}
 
-//es eliminación de paciente, verificar antes si se puede eliminar
-$habilitarBoton ="";
-if(isset($_GET["del"]) && $_GET["del"] == 1 ) {
-	$etiquetaBoton = "Eliminar";	
-	//aqui mismo validar si hay chance de eliminar
-	//si tiene tratamientos no se elimina
-	$paciente->setCdPaciente($_GET["cdpac"]);
-	$sqlValidacion = $paciente->validarEliminarPaciente();	
-	$resultTratamientos = $pdo->pdoGetRow($sqlValidacion);
-	$numTratamientos = $resultTratamientos["conteo"];
-	//deshabilitar el botón porque existen datos asociados
-	if($numTratamientos > 0) {
-		//echo "se deshabilita el boton por " . $numTratamientos;
-		$habilitarBoton = "disabled";		
-	}	
-}
+	//es eliminación de paciente, verificar antes si se puede eliminar
+	$habilitarBoton ="";
+	if(isset($_GET["del"]) && $_GET["del"] == 1 ) {
+		$etiquetaBoton = "Eliminar";	
+		//aqui mismo validar si hay chance de eliminar
+		//si tiene tratamientos no se elimina
+		$paciente->setCdPaciente($_GET["cdpac"]);
+		$sqlValidacion = $paciente->validarEliminarPaciente();	
+		$resultTratamientos = $pdo->pdoGetRow($sqlValidacion);
+		$numTratamientos = $resultTratamientos["conteo"];
+		//deshabilitar el botón porque existen datos asociados
+		if($numTratamientos > 0) {
+			//echo "se deshabilita el boton por " . $numTratamientos;
+			$habilitarBoton = "disabled";		
+		}	
+	}
 
-//cargar las sucursales
-$sucursal = new Sucursal();
-$sql = $sucursal->getTodasSucursales();
-$combo = "";
-if($con) {
-	$result = $pdo->pdoGetAll($sql);
-	$combo = construirCombo($result, $paciente->getCdSucursal());
+	//cargar las sucursales
+	$sucursal = new Sucursal();
+	$sql = $sucursal->getTodasSucursales();
+	$combo = "";
+	if($con) {
+		$result = $pdo->pdoGetAll($sql);
+		$combo = construirCombo($result, $paciente->getCdSucursal());
+	}
+ 
 }
  
 ?>

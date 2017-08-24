@@ -1,6 +1,5 @@
 <?php
 include("./aplicacion/bdd/PdoWrapper.php");
-include("./include/autenticacion.php");
 require_once("./include/dabejas_config.php");
 
 //antes validar que la sesión es válida, es decir que sí se logueó.
@@ -16,7 +15,7 @@ if(!$autenticacion->CheckLogin())
     
     //hace consulta de los elementos a los que tiene acceso:
     $pdo = new PdoWrapper();
-    $con = $pdo->pdoConnect("localhost", "tatianag", "Cpsr19770428", "bdd_seguridades");
+    $con = $pdo->pdoConnect();
                          
     if($con) {
         //obtener la consulta de los permisos

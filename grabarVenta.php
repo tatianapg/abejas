@@ -1,5 +1,4 @@
 <?php
-
 include("./aplicacion/bdd/PdoWrapper.php");
 include("./aplicacion/model/accionProducto/accionProducto.php");
 include("./aplicacion/model/producto/Producto.php");
@@ -20,7 +19,7 @@ if(!$autenticacion->CheckLogin()) {
 	if(isset($_POST["grabarVenta"]) && $_POST["grabarVenta"] == 1) {
 
 		$pdo = new PdoWrapper();
-		$con = $pdo->pdoConnect("localhost", "tatianag", "Cpsr19770428", "bdd_abejas");
+		$con = $pdo->pdoConnect();
 
 		//identificar si es una compra o venta
 		//tenemos un array que tiene: codigo precio nombre, la cantidad es 1

@@ -16,7 +16,7 @@ if(!$autenticacion->CheckLogin()) {
 } else {
 
 		$pdo = new PdoWrapper();
-		$con = $pdo->pdoConnect("localhost", "tatianag", "Cpsr19770428", "bdd_abejas");
+		$con = $pdo->pdoConnect();
 
 		//identificar si es una compra o venta
 		//$codigoCabecera es cero

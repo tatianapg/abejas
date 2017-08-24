@@ -2,7 +2,6 @@
 include("./aplicacion/controller/Controller.php");
 require("page_header.php");
 
-
 //1. colocar aqui la variable para permitir que ingrese en el else abajo
 //2. colocar abajo el else
 if( !isset($_GET["cdpro"]) && !isset($_GET["cdpac"]) && !isset($_GET["cdinv"]) && !isset($_GET["cdven"])) {

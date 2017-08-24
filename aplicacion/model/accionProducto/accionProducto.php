@@ -15,6 +15,7 @@ class AccionProducto {
 	private $cd_subtipo_accion;
 	private $cd_usuario;
 	private $cd_cabecera;
+	private $dato_sensible;
 	
 	//campos para reportes
 	private $fe_reporte_diario_fin;
@@ -24,6 +25,9 @@ class AccionProducto {
 	function __construct() {
 	}
 	
+	function setDatoSensible($dato_sensible) {
+		$this->dato_sensible = $dato_sensible;
+	}
 	
 	function setCdUsuario($cd_usuario) {
 		$this->cd_usuario = $cd_usuario;
@@ -377,12 +381,12 @@ class AccionProducto {
 		if($this->fe_reporte_diario_inicio && $this->fe_reporte_diario_fin) {
 			$condicionFechas = " and fe_accion between '" .  $this->fe_reporte_diario_inicio ."' and '" . $this->fe_reporte_diario_fin ."' ";
 		}
-		
+						
 		
 		$sql = "select p.nm_producto, p.sku_producto, sum(a.cantidad_accion) as cantidad, " .
 			   " a.precio_accion as precio, " .
 			   " (sum(a.cantidad_accion) * a.precio_accion) as ingreso, " .
-			   " (sum(a.cantidad_accion) * a.costo_accion) as costo, " .
+			   " ((sum(a.cantidad_accion) * a.costo_accion)* ".$this->dato_sensible.") as costo, " .
 			   " s.nm_sucursal, u.login_usuario " .
 			   " from acciones_producto a, productos p, sucursales s, bdd_seguridades.usuarios u " .
 			   " where " .

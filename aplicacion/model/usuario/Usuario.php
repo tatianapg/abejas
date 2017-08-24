@@ -6,19 +6,42 @@ class Usuario {
 	private $clave_usuario;
 	private $email_usuario;
 	private $obs_usuario;
+	private $es_usuario_admin;
+	private $ver_info_sensible;
+	private $esta_activo;
 	
 	function __construct() {
 	}
 	
-	function setUsuario($cd_usuario, $nm_usuario, $login_usuario, $clave_usuario, $email_usuario, $obs_usuario) {
+	function setUsuario($cd_usuario, $nm_usuario, $login_usuario, $clave_usuario, $email_usuario, 
+	$obs_usuario, $es_usuario_admin, $ver_info_sensible ,$esta_activo) {
 		$this->cd_usuario = $cd_usuario;
 		$this->nm_usuario = $nm_usuario;
 		$this->login_usuario = $login_usuario;
 		$this->clave_usuario = $clave_usuario;
 		$this->email_usuario = $email_usuario;
 		$this->obs_usuario = $obs_usuario;
+		$this->es_usuario_admin = $es_usuario_admin;
+		$this->ver_info_sensible = $ver_info_sensible;
+		$this->esta_activo = $esta_activo;
 	}
 
+	function getClaveUsuario() {
+		return $this->clave_usuario;
+	}
+	
+	function getNmUsuario() {
+		return $this->nm_usuario;
+	}
+	
+	function getObsUsuario() {
+		return $this->obs_usuario;
+	}
+	
+	function getEstaActivo() {
+		return $this->esta_activo;	
+	}
+	
 	function setCdUsuario($cd_usuario) {
 		$this->cd_usuario = $cd_usuario;
 	}
@@ -31,8 +54,19 @@ class Usuario {
 		return $this->login_usuario;
 	}
 	
+	function getEsUsuarioAdmin() {
+		return $this->es_usuario_admin;
+	}
 	
-	    
+	function getVerInfoSensible() {
+		return $this->ver_info_sensible;
+	}
+
+	function getEstaActivo() {
+		return $this->esta_activo;
+	}
+
+	
     function consultarUsuario() {
         $cons = "select * from bdd_seguridades.usuarios where cd_usuario = " . $this->cd_usuario;
         return $cons;
@@ -46,6 +80,8 @@ class Usuario {
         $this->clave_usuario = $fila["CLAVE_USUARIO"];
         $this->email_usuario = $fila["EMAIL_USUARIO"];
         $this->obs_usuario = $fila["OBS_USUARIO"];
+        $this->es_usuario_admin = $fila["ES_USUARIO_ADMIN"];
+        $this->ver_info_sensible = $fila["VER_INFO_SENSIBLE"];
     }
     	
 }

@@ -27,7 +27,7 @@ if(!$autenticacion->CheckLogin()) {
 			//guardar los valores en una variable
 			///$_SESSION["lista_productos"][$i] = $_POST["txtCodigoProducto"];
 			$pdo = new PdoWrapper();
-			$con = $pdo->pdoConnect("localhost", "tatianag", "Cpsr19770428", "bdd_abejas");
+			$con = $pdo->pdoConnect();
 				
 			$producto = new Producto();
 			$producto->setSkuProducto($_POST["txtCodigoProducto"]);

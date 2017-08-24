@@ -1,3 +1,12 @@
+<?php
+require_once("./include/dabejas_config.php");
+
+if(!$autenticacion->CheckLogin()) {
+	$autenticacion->RedirectToURL("login.php");
+    exit;
+}
+
+?>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html charset=utf-8"/>

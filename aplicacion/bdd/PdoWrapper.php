@@ -15,10 +15,15 @@ class PdoWrapper {
     }
     
     
-    function pdoConnect($server, $username, $password, $database) {
+	//funcion para conectar a la base de datos
+    function pdoConnect() {
+    //function pdoConnect($server, $username, $password, $database) {
         
         try {
-            $this->con = new PDO("mysql:dbname=$database; host=$server", $username, $password);
+			$config = parse_ini_file('config_abe.ini'); 
+            //$this->con = new PDO("mysql:dbname=$database; host=$server", $username, $password);			
+            $this->con = new PDO("mysql:dbname=".$config['dbname']."; host=" . $config['server'], $config['username'], $config['password']);
+			
         } catch(PDOException $e) {            
             $this->pdoException($e->getMessage());
             exit;
@@ -59,16 +64,6 @@ class PdoWrapper {
         return $rows;
     }
     
-    /*
-    function pdoGetAssoc($query, $array=array()) {
-        $rows = $this->pdoGetAll($query, $array);
-        foreach($rows as $row) {
-            $idx = array_shift($row);
-            $rows_assoc[$idx] = $row;
-        } 
-        return $rows_assoc;
-    }
-    */
     
     function pdoGetRow($query) {
         $stmt = $this->pdoExecute($query);

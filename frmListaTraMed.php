@@ -3,6 +3,7 @@ include("./aplicacion/controller/Controller.php");
 include("./aplicacion/bdd/PdoWrapper.php");
 include("./aplicacion/model/tratamiento/Tratamiento.php");
 include("./aplicacion/model/medicacion/Medicacion.php");
+require_once("./include/dabejas_config.php");
 ?>
 <html>
 <head>
@@ -18,44 +19,51 @@ include("./aplicacion/model/medicacion/Medicacion.php");
 		<fieldset>
 			<legend>Lista de tratamientos</legend>
 <?php
-$pdo = new PdoWrapper();
-$con = $pdo->pdoConnect("localhost", "tatianag", "Cpsr19770428", "bdd_abejas");
 
-//antes verificar si debe eliminar
-if(isset($_GET["cdmed"]) && $_GET["cdmed"] != 0) {
-	$medicacion = new Medicacion();
-	$medicacion->setCdMedicacion($_GET["cdmed"]);
-	$sql = $medicacion->eliminarMedicacion();
-	$numInserts = $pdo->pdoInsertar($sql);						
-}
+if(!$autenticacion->CheckLogin()) {
+	$autenticacion->RedirectToURL("login.php");
+    exit;
+} else {
 
-$tratamiento = new Tratamiento();
-$sqlTratamientos = $tratamiento->consultarDetalleTratamientosPorPaciente($_GET["cdpac"]);
-//echo $sqlTratamientos;
-$res = $pdo->pdoGetAll($sqlTratamientos);
-echo("<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\" >");
-echo("<tr><td>Descripci&#243;n</td><td>Fecha</td><td>No.terapias</td><td>Medicación</td></tr>");
-//<td>No.terapias hechas</td>
-$indice=0;
-$color = "#ccf2ff";
-	foreach($res as $fila) {
-		if($indice%2)
-			$color = "#b3ecff";
-		else 	
-			$color = "#66d9ff";							
+	$pdo = new PdoWrapper();
+	$con = $pdo->pdoConnect();
+
+	//antes verificar si debe eliminar
+	if(isset($_GET["cdmed"]) && $_GET["cdmed"] != 0) {
+		$medicacion = new Medicacion();
+		$medicacion->setCdMedicacion($_GET["cdmed"]);
+		$sql = $medicacion->eliminarMedicacion();
+		$numInserts = $pdo->pdoInsertar($sql);						
+	}
+
+	$tratamiento = new Tratamiento();
+	$sqlTratamientos = $tratamiento->consultarDetalleTratamientosPorPaciente($_GET["cdpac"]);
+	//echo $sqlTratamientos;
+	$res = $pdo->pdoGetAll($sqlTratamientos);
+	echo("<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\" >");
+	echo("<tr><td>Descripci&#243;n</td><td>Fecha</td><td>No.terapias</td><td>Medicación</td></tr>");
+	//<td>No.terapias hechas</td>
+	$indice=0;
+	$color = "#ccf2ff";
+		foreach($res as $fila) {
+			if($indice%2)
+				$color = "#b3ecff";
+			else 	
+				$color = "#66d9ff";							
+			
+			echo("<tr bgcolor=\"". $color ."\">");
+			echo "<td>" . $fila["nm_tratamiento"] . "</td>";
+			//formatear la fecha            
+			$fechaSalida = strtotime($fila["fe_tratamiento"]);
+			$fechaFormateada = date("Y/m/d", $fechaSalida);            
+			echo "<td>" . $fechaFormateada . "</td>";		
+			echo "<td align=\"center\">" . $fila["terapias_tratamiento"] . "</td>";		
+			echo "<td align=\"center\"><a href=\"#\" onclick=\"cargarResultadosDivMedicaciones('".$fila["cd_tratamiento"]."');\"><img src=\"images/medicacion.png\">Ver</a></td>";
+			echo("</tr>");
+			$indice++;
+		} //fin foreach
+		echo("</table>");
 		
-		echo("<tr bgcolor=\"". $color ."\">");
-		echo "<td>" . $fila["nm_tratamiento"] . "</td>";
-        //formatear la fecha            
-        $fechaSalida = strtotime($fila["fe_tratamiento"]);
-        $fechaFormateada = date("Y/m/d", $fechaSalida);            
-		echo "<td>" . $fechaFormateada . "</td>";		
-		echo "<td align=\"center\">" . $fila["terapias_tratamiento"] . "</td>";		
-		echo "<td align=\"center\"><a href=\"#\" onclick=\"cargarResultadosDivMedicaciones('".$fila["cd_tratamiento"]."');\"><img src=\"images/medicacion.png\">Ver</a></td>";
-		echo("</tr>");
-		$indice++;
-	} //fin foreach
-	echo("</table>");
 ?>
 			
 		</fieldset>
@@ -65,38 +73,39 @@ $color = "#ccf2ff";
 			<legend>Lista de medicaciones</legend>
 			<div id="divResultadosMedicaciones" name="divResultadosMedicaciones">
 <?php
-if(isset($_GET["cdmed"]) && $_GET["cdmed"] != 0) {
-	$sqlTratamiento = $tratamiento->consultarTratamientoPorCd($_GET["cdtra"]);
-	$fila = $pdo->pdoGetRow($sqlTratamiento);
-	$tratamiento->obtenerTratamiento($fila);
+	if(isset($_GET["cdmed"]) && $_GET["cdmed"] != 0) {
+		$sqlTratamiento = $tratamiento->consultarTratamientoPorCd($_GET["cdtra"]);
+		$fila = $pdo->pdoGetRow($sqlTratamiento);
+		$tratamiento->obtenerTratamiento($fila);
 
-	$sqlMedicaciones = $tratamiento->getDatosMedicacionesdeTratamiento();
-	if($con) {
-		$res = $pdo->pdoGetAll($sqlMedicaciones);
+		$sqlMedicaciones = $tratamiento->getDatosMedicacionesdeTratamiento();
+		if($con) {
+			$res = $pdo->pdoGetAll($sqlMedicaciones);
 
-		echo("<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\" >");
-		echo("<tr><td colspan=\"3\"><b>". $tratamiento->getNmTratamiento() ."</b></td></tr>");
-		echo("<tr><td>Fecha</td><td>Notas</td><td>Eliminar</td></tr>");
-			$indice=0;
-			$color = "#ccf2ff";
-			foreach($res as $fila) {
-				if($indice%2)
-					$color = "#b3ecff";
-				else 	
-					$color = "#66d9ff";							
-			
-				echo("<tr bgcolor=\"". $color ."\">");
-				$fechaSalida = strtotime($fila["fe_medicacion"]);
-				$fechaFormateada = date("Y/m/d", $fechaSalida);            
-				echo "<td>" . $fechaFormateada . "</td>";		
-				echo "<td>" . $fila["notas_medicacion"] . "</td>";		
-				echo "<td><a href=\"frmListaTraMed.php?cdtra=". $fila["cd_tratamiento"] . "&cdmed=" .$fila["cd_medicacion"] . "&cdpac=". $tratamiento->getCdPaciente()  ."\"><img src=\"images/deletei.png\"></a></td>";
-				$indice++;
-			} //fin foreach
-			echo("</table>");
+			echo("<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\" >");
+			echo("<tr><td colspan=\"3\"><b>". $tratamiento->getNmTratamiento() ."</b></td></tr>");
+			echo("<tr><td>Fecha</td><td>Notas</td><td>Eliminar</td></tr>");
+				$indice=0;
+				$color = "#ccf2ff";
+				foreach($res as $fila) {
+					if($indice%2)
+						$color = "#b3ecff";
+					else 	
+						$color = "#66d9ff";							
+				
+					echo("<tr bgcolor=\"". $color ."\">");
+					$fechaSalida = strtotime($fila["fe_medicacion"]);
+					$fechaFormateada = date("Y/m/d", $fechaSalida);            
+					echo "<td>" . $fechaFormateada . "</td>";		
+					echo "<td>" . $fila["notas_medicacion"] . "</td>";		
+					echo "<td><a href=\"frmListaTraMed.php?cdtra=". $fila["cd_tratamiento"] . "&cdmed=" .$fila["cd_medicacion"] . "&cdpac=". $tratamiento->getCdPaciente()  ."\"><img src=\"images/deletei.png\"></a></td>";
+					$indice++;
+				} //fin foreach
+				echo("</table>");
+		}
 	}
-}
 
+}
 ?>			
 			</div>
 		</fieldset>	

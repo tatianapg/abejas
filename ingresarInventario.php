@@ -3,7 +3,6 @@
 */
 include("./aplicacion/model/inventario/Inventario.php");
 include("./aplicacion/bdd/PdoWrapper.php");
-include("./include/autenticacion.php");
 require_once("./include/dabejas_config.php");
 
 if(!$autenticacion->CheckLogin()) {
@@ -27,7 +26,7 @@ if(!$autenticacion->CheckLogin()) {
 
 	//establecer la conexión
 	$pdo = new PdoWrapper(); 
-	$con = $pdo->pdoConnect("localhost", "tatianag", "Cpsr19770428", "bdd_abejas");
+	$con = $pdo->pdoConnect();
 
 	$del=0;
 	if($con) {

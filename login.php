@@ -1,16 +1,23 @@
 <?php
+include("./aplicacion/bdd/PdoWrapper.php");
 require_once("./include/dabejas_config.php");
 
 if(isset($_POST['submitted']))
 {
-   if($autenticacion->Login())
-   {
-        //echo "valido correctamente!!!";
-        //$autenticacion->RedirectToURL("index.php");
-		$autenticacion->RedirectToURL("frmSetSucursal.php");
-   }
-}
+	/* Obtener un objeto conexión y pasarlo para que haga login*/
+	$pdo = new PdoWrapper();
+	$con = $pdo->pdoConnect();
 
+	if($con) {
+	   if($autenticacion->Login($pdo))
+	   {
+			$autenticacion->RedirectToURL("frmSetSucursal.php");
+	   }
+	} else {
+		echo "Error al acceder a la base de datos.";
+	}
+	
+}
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -19,10 +26,6 @@ if(isset($_POST['submitted']))
       <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
       <title>Ingreso al sistema - Dra.Abejas</title>
       <link rel="STYLESHEET" type="text/css" href="css/style.css" />
-	  <!--
-      <script type='text/javascript' src='scripts/gen_validatorv31.js'></script>
-	  
-	  -->
       <script type='text/javascript' src='js/jquery.js'></script>
 
 <script>

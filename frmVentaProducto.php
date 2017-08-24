@@ -12,8 +12,7 @@ if(!$autenticacion->CheckLogin()) {
 
 	//abrir una conexion con la bdd
 	$pdo = new PdoWrapper();
-	$con = $pdo->pdoConnect("localhost", "tatianag", "Cpsr19770428", "bdd_abejas");
-
+	$con = $pdo->pdoConnect();
 
 	//ver si existe un inventario activo
 	$inventario = new Inventario();

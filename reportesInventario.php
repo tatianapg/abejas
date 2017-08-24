@@ -18,8 +18,7 @@ require_once("./include/dabejas_config.php");
 if(!$autenticacion->CheckLogin()) {
 	$autenticacion->RedirectToURL("login.php");
     exit;
-} else {
-
+} else {	
 	//si valido el usuario, entonces generar el reporte
 	$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 	// set document information
@@ -86,7 +85,7 @@ if(!$autenticacion->CheckLogin()) {
 
 	//establcer la conexion con la bdd
 	$pdo = new PdoWrapper(); 
-	$con = $pdo->pdoConnect("localhost", "tatianag", "Cpsr19770428", "bdd_abejas");
+	$con = $pdo->pdoConnect();
 	$sql ="sin sentencia";
 
 	//consultar la sucursal
@@ -115,6 +114,7 @@ if(!$autenticacion->CheckLogin()) {
 	/////////////////////////////////
 		//setear los parámetros para todos los reportes
 		$reporteAccion = new AccionProducto();
+		$reporteAccion->setDatoSensible($_SESSION['ver_infosen']);
 		$reporteAccion->setCdInventario($cdInventarioActivo);
 		$reporteAccion->setFeReporteDiarioInicio($feInicio . " 00:00:00");
 		$reporteAccion->setFeReporteDiarioFin($feFin . " 23:59:59"); //date('Y-m-d')
@@ -202,6 +202,7 @@ if(!$autenticacion->CheckLogin()) {
 				$registros = 0;
 				$sumaUnidades = 0;
 				$sumaDevoluciones= 0;
+				$sumaCosto = 0;
 				
 				foreach($result as $fila) {
 					$registros++;
@@ -220,11 +221,12 @@ if(!$autenticacion->CheckLogin()) {
 					//sumas de las unidades vendidas y precios
 					$sumaUnidades += $fila["cantidad"];
 					$sumaDevoluciones += $fila["ingreso"];
+					$sumaCosto += $fila["costo"];
 				}
 				
 				
 				$tbl .= "<tr><td></td><td></td><td><b>Totales:</b></td><td align=\"right\"><b>". number_format($sumaUnidades, 0) . "</b></td>";
-				$tbl .= "<td></td><td align=\"right\"><b>". number_format($sumaDevoluciones, 2)."</b></td><td></td><td></td></tr>";			
+				$tbl .= "<td></td><td align=\"right\"><b>". number_format($sumaDevoluciones, 2)."</b></td><td align=\"right\"><b>".number_format($sumaCosto, 2)."</b></td><td></td></tr>";			
 				$tbl .= "</table><p></p>";	
 				
 				
