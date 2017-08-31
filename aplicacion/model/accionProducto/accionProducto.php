@@ -162,7 +162,7 @@ class AccionProducto {
 			   " and a.cd_sucursal = s.cd_sucursal " .
 			   " and a.cd_subtipo_accion = t.cd_tipo_accion " .
 			   " and a.cd_usuario = u.cd_usuario " . 
-			   " order by s.nm_sucursal, a.cd_cabecera, u.login_usuario, a.fe_accion ";		
+			   " order by s.nm_sucursal, a.cd_cabecera, p.nm_producto, u.login_usuario, a.fe_accion ";		
 		
 		//echo "consulta sql: " . $sql;	
 		return $sql;
@@ -327,7 +327,7 @@ class AccionProducto {
 	function recuperarAccionesDadaCabecera() {
 		
 		$sql = "select p.nm_producto as nombre, p.sku_producto as codigo, a.precio_accion as precio, " .
-				" a.cantidad_accion, a.cd_cabecera " .
+				" a.cantidad_accion as cantidad, a.cd_cabecera " .
 				" from acciones_producto a, productos p " .
 				" where a.cd_cabecera = " . $this->cd_cabecera . 
 				" and a.cd_sucursal = " . $this->cd_sucursal .

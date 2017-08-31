@@ -86,11 +86,11 @@ function cargarResultadosDivProductos() {
 	}   
 }
 
-function cargarProductosPaginacion(txtPro, pagina) {
+function cargarProductosPaginacion(txtPro, pagina, criterio) {
 	var producto = txtPro;
 	
 	if(producto.length>0) {
-		$.post("buscarProducto.php", { txtPro: producto, pag: pagina},
+		$.post("buscarProducto.php", { txtPro: producto, pag: pagina, cmbCriterio: criterio},
 		   function(data) {
 			 $('#divResultadosBusquedaProducto').html(data);
 			 //$('#frmBuscarProducto')[0].reset();
@@ -202,6 +202,7 @@ function grabarVenta() {
 
 /* permite ingresar un descuento*/
 function ingresarDescuento() {
+
 	var descuento = $("#txtDescuento").val();
 	if(descuento.length>0) {
 		$.post("ventaProducto.php", { txtDescuento: descuento, limpiar : 2},
@@ -215,6 +216,7 @@ function ingresarDescuento() {
 }
 
 function borrarItem(codItem) {
+	
 	$.post("ventaProducto.php", { cdIndice: codItem, limpiar : 3},
 	function(data) {
 		$('#divVenta').html(data);
@@ -235,4 +237,22 @@ function cargarResultadosDivRecibo() {
 			 $('#frmConsultarVenta')[0].reset();
 		   });
 	}   
+}
+
+function abrirCaja(indice) {
+	$("#divCantidad").show();
+}
+
+//en la funcion al indice se le resta -1
+function cerrarCaja(indice) {
+
+	$("#divCantidad").hide();
+	var nuevoValor = $("#txtCantidad").val();
+
+	$.post("ventaProducto.php", { cdIndice: indice, limpiar : 4, nuevaCantidad: nuevoValor },	
+	function(data) {
+		$('#divVenta').html(data);
+		$('#frmVentaProducto')[0].reset();
+		$('#txtCodigoProducto').focus();
+	});	
 }

@@ -43,14 +43,14 @@ $(function() {
 <!--
 <label>Texto a buscar*</label>
 -->
-<label>Producto a buscar*</label>
-<!--
+<label>Producto a buscar por: </label>
+
 <select name="cmbCriterio" id="cmbCriterio">
 <option value="nm_producto">Nombre</option>
 <option value="sku_producto">Código</option>
--->
-<input type="textbox" id="txtPro" name="txtPro"></input>
 </select>
+<input type="textbox" id="txtPro" name="txtPro"></input>
+
 <!--
 <input name="txtPro" id="txtPro">
 -->

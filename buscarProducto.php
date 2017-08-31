@@ -39,6 +39,7 @@ if(!$autenticacion->CheckLogin()) {
 	if(isset($_POST["txtPro"])) {
 		$txtPro = $_POST["txtPro"];
 	} 
+	$criterio = $_POST["cmbCriterio"];
 
 	$numResultado = 0;
 	//fin para paginacion
@@ -50,6 +51,7 @@ if(!$autenticacion->CheckLogin()) {
 			$producto = new Producto();
 			//obtener el número total de productos		
 			$producto->setNmProducto($txtPro);
+			$producto->setCriterioBuscar($criterio);
 			$sql = $producto->buscarProductosPorNombre($inicio, $numRegPagina, 1);
 			$res = $pdo->pdoGetAll($sql);
 			$numResultado = count($res);
@@ -100,7 +102,7 @@ if(!$autenticacion->CheckLogin()) {
 		//"cargarResultadosDivProductos();"
 		//"buscarProducto.php?txtPro=".$txtPro."&pag=". $i. "
 			//$txtPaginas .= "<a href=\"buscarProducto.php?txtPro=".$txtPro."&pag=". $i. "\">[".$i."]</a>";
-			$txtPaginas .= "<a href=\"#\" onclick=\"cargarProductosPaginacion('".$txtPro."',".$i.");\">[".$i."]</a>";
+			$txtPaginas .= "<a href=\"#\" onclick=\"cargarProductosPaginacion('".$txtPro."',".$i. ",'" .$criterio ."');\">[".$i."]</a>";
 		}	
 	}
 	echo("Páginas: " . $txtPaginas);

@@ -1,5 +1,6 @@
 <?php
 class Inventario {
+	
     private $cd_inventario;
     private $cd_estado_sistema;
     private $nm_inventario;

@@ -21,38 +21,35 @@ require_once("./include/dabejas_config.php");
 $(function() {
   
   // Initialize form validation on the registration form.
-  $("form[name='frmIngInventario']").validate({
+  $("form[name='frmIngUsuario']").validate({
     // Specify validation rules
     rules: {
       // The key name on the left side is the name attribute
       // of an input field. Validation rules are defined
       // on the right side
-      txtNmInventario: "required",
-	  txtAnioFiscalInventario: {
-        required: true,
-		number:true
-	  },
-	  txtFeInicioInventario: {
-		required: true
-	  },
-	  txtFeFinInventario: {
-		required:true 
-	  }
-	  
+      txtNmUsuario: "required",
+	  txtLogin: {
+		  required: true,
+		  minlength: 8
+	  },	  
+	  cmbEstado: "required",
+	  txtClave: {
+		  required: true,
+		  minlength: 8
+	  }	  
 	},  
     messages: {
-      txtNmInventario: "requerido",
-      txtAnioFiscalInventario: {
+      txtNmUsuario: "requerido",
+	  txtLogin: {
         required: "requerido",
-		number: "Ingrese un n&#250;mero correcto"
-      },
-	  txtFeInicioInventario: 
-	  { 
-	    required: "requerido"
+        minlength: "Al menos 8 caracteres."
+		  
 	  },
-	  txtFeFinInventario: { 
-	    required: "requerido"
-	  }
+	  txtClave: {
+        required: "requerido",
+        minlength: "Al menos 8 caracteres."		  
+	  },
+	  cmbEstado: "requerido"
 	  
     },
  
@@ -84,51 +81,46 @@ if(!$autenticacion->CheckLogin()) {
 	
 	$usuario = new Usuario();
 
-	//es modificacion de inventario
-
-
- /////
 }
  
 ?>
-<form method="post" action="ingUsuario.php" name="frmIngUsuario" id="frmIngUsuario">
+<form method="post" action="ingresarUsuario.php" name="frmIngUsuario" id="frmIngUsuario">
 <div>
 <fieldset><legend>Datos de Usuario</legend>
 <table>
 <tr>
-<td class="etiqueta">Nombre*</td><td><input name="txtNmInventario" id="txtNmInventario" value="<?php echo($usuario->getNmUsuario());?>"></input></td>
-<td class="etiqueta">Login*</td><td><input class="cajaCorta" name="txtAnioFiscalInventario" id="txtAnioFiscalInventario" value="<?php echo($inventario->getLoginUsuario());?>"></td><td></td></input>
+<td class="etiqueta">Nombre*</td><td><input name="txtNmUsuario" id="txtNmUsuario" value="<?php echo($usuario->getNmUsuario());?>"></input></td>
+<td class="etiqueta">Login*</td><td><input class="cajaCorta" name="txtLogin" id="txtLogin" value="<?php echo($usuario->getLoginUsuario());?>"></input></td>
 </tr>
 <tr>
-<td class="etiqueta">Clave*</td><td><input class="cajaCorta" name="txtAnioFiscalInventario" id="txtAnioFiscalInventario" value="<?php echo($inventario->getAnioFiscalInventario());?>"></td><td></td></input>
-<td class="etiqueta">Estado*</td><td><input class="cajaCorta" name="txtAnioFiscalInventario" id="txtAnioFiscalInventario" value="<?php echo($inventario->getAnioFiscalInventario());?>"></td><td></td></input>
-</tr>
-</tr>
-<tr>
-<td class="etiqueta">Estado</td><td colspan="4"><select>
+<td class="etiqueta">Clave*</td>
+<td><input class="cajaCorta" type="password" name="txtClave" id="txtClave" value="<?php echo($usuario->getClaveUsuario());?>"></input></td>
+<td class="etiqueta">Estado*</td><td>
+<select id="cmbEstado" name="cmbEstado">
 <option value="">Seleccione</option>
-<option value="1">Activo</option>
-<option value="-1">Inactivo</option>
+<option value="1" <?php if($usuario->getEstaActivo() == 1) echo "selected"; ?>>Activo</option>
+<option value="-1" <?php if($usuario->getEstaActivo() == -1) echo "selected"; ?>>Inactivo</option>
 </select></td>
 </tr>
 <tr>
-<td colspan="5">
-<table>
-<tr>
-<td class="etiqueta">Observaciones</td>
+	<td><input class="checkbox" type="checkbox" name="ver_sensible" id="ver_sensible" value="sensible" <?php if($usuario->getVerInfoSensible() == 1) echo "checked";?>></td><td class="etiqueta">Ver datos sensibles?</td><td></td><td></td>
 </tr>
 <tr>
-<td colspan="4"><textarea name="txtObsInventario" id="txtObsInventario"><?php echo($inventario->getObsInventario());?></textarea></td>
+<td><input class="checkbox" type="checkbox" name="es_admin" id="es_admin" value="admin"></td><td class="etiqueta">Es administrador?</td><td></td><td></td>
 </tr>
-</table>
+<td colspan="4">
+	<table>	
+	<tr>
+	<td class="etiqueta">Observaciones</td>
+	</tr>
+	<tr>
+	<td colspan="4"><textarea name="txtObsUsuario" id="txtObsUsuario"><?php echo($usuario->getObsUsuario());?></textarea></td>
+	</tr>
+	</table>
 </td>
 </tr>
 </table>
-<?php 
-//si ya existe un inventario activo, no se permite el ingreso de otro hasta inactivar el anterior.
-?>
-<div id="mensajeActivos" id="mensajeActivos"><b><?php echo($mensajeActivos);?></b></div>
-<p><input class="submit" type="submit" <?php echo($habilitarBoton); ?> value="<?php echo($etiquetaBoton); ?>" name="btnInventario" id="btnInventario"><p>
+<p><input class="submit" type="submit" value="<?php echo($etiquetaBoton); ?>" name="btnUsuario" id="btnUsuario"><p>
 </fieldset>
 </div>
 </form>

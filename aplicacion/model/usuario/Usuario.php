@@ -61,28 +61,58 @@ class Usuario {
 	function getVerInfoSensible() {
 		return $this->ver_info_sensible;
 	}
-
-	function getEstaActivo() {
-		return $this->esta_activo;
+	    	
+	function crearUsuario() {
+		$sql = "insert into bdd_seguridades.usuarios(cd_usuario, nm_usuario, login_usuario, clave_usuario, email_usuario, obs_usuario, es_usuario_admin, ver_info_sensible, esta_activo) values( " . 
+		$this->cd_usuario . ", " .
+		"'" . $this->nm_usuario . "', " .
+		"'" . $this->login_usuario . "', " . 
+		" md5('" . $this->clave_usuario . "'), " . 
+		"null" . 
+		"'" . $this->obs_usuario . "', " .
+		$this->es_usuario_admin . ", " . 
+		$this->ver_info_sensible . ", " . 
+		$this->esta_activo . ")";
+		
+		echo $sql;
+		return $sql;
 	}
-
+	
+	function modificarUsuario() {
+		$sql = "update bdd_seguridades.usuarios set " .
+			" nm_usuario = '" . $this->nm_usuario . "', " .
+			" login_usuario = '" . $this->login_usuario . "', " . 
+			" clave_usuario = md5('" . $this->clave_usuario . "'), " .
+			" email_usuario = null, " . 
+			" obs_usuario = '" . $this->obs_usuario . "', " . 
+			" es_usuario_admin = " . $this->es_usuario_admin . ", " .
+			" ver_info_sensible = " . $this->ver_info_sensible . ", " . 
+			" esta_activo = " . $this->esta_activo . 
+			" where cd_usuario = " . $this->cd_usuario;
+			
+		echo "modificar " . $sql;	
+		return $sql;	
+	}
 	
     function consultarUsuario() {
         $cons = "select * from bdd_seguridades.usuarios where cd_usuario = " . $this->cd_usuario;
         return $cons;
     }
-    
+
     function obtenerUsuario($fila) {
-        //echo "===========Entrando a get sucursal ===============";
+        //echo "===========Entrando a get usuario ===============";
         $this->cd_usuario = $fila["CD_USUARIO"];
         $this->nm_usuario = $fila["NM_USUARIO"];
         $this->login_usuario = $fila["LOGIN_USUARIO"];
         $this->clave_usuario = $fila["CLAVE_USUARIO"];
         $this->email_usuario = $fila["EMAIL_USUARIO"];
         $this->obs_usuario = $fila["OBS_USUARIO"];
-        $this->es_usuario_admin = $fila["ES_USUARIO_ADMIN"];
+        $this->es_usuario_admin  = $fila["ES_USUARIO_ADMIN"];
         $this->ver_info_sensible = $fila["VER_INFO_SENSIBLE"];
+		$this->esta_activo = $fila["ESTA_ACTIVO"];
+		
     }
+	
     	
 }
 ?>

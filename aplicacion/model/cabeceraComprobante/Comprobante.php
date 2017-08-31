@@ -174,7 +174,6 @@ class Comprobante {
 		return $this->total_comprobante;
 	}
 	
-	
 	function getCdSucursal() {
 		return $this->cd_sucursal;
 	}
