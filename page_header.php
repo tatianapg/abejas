@@ -6,6 +6,7 @@
 <script src="<?php echo getBaseUrl(); ?>js/jquery.js"></script>
 <script src="<?php echo getBaseUrl(); ?>js/jquery_validate.js"></script>
 <script src="<?php echo getBaseUrl(); ?>js/demo.js"></script>
+<script src="<?php echo getBaseUrl(); ?>js/additional-methods.min.js"></script>
 
 </head>
 <body >

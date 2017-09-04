@@ -76,7 +76,7 @@ if(!$autenticacion->CheckLogin()) {
 				$i=0;				
 
 				$tabla = "<table cellpadding=\"1\">";
-				$tabla .= "<tr><td align=\"center\" colspan=\"3\"><h3>Recibo No. ".$txtCdRecibo."</h3></td></tr>";
+				$tabla .= "<tr><td align=\"center\" colspan=\"3\"><h3>Recibo No. ".$comprobante->getCodigoComprobante()."</h3></td></tr>";
 				$tabla .= "<tr>";
 				$tabla .= "<td><b>Cliente:</b> ". $comprobante->getNmCliente() ."</td><td></td>";
 				$tabla .= "<td><b>Fecha compra:</b> ".$comprobante->getFeComprobante() ."</td>";

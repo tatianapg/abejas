@@ -118,7 +118,6 @@ function cargarResultadosDivCargarProducto() {
 
 	var codigo = $("#txtCodigoProducto").val();
 	var cantidad = $("#txtCantidadAccion").val();
-	//var sucursal = $("#cmbSucursal").val();
 	var subtipo = $("#cmbSubtipo").val();
 	var accion = $("#txtTipoAccion").val();
 	var inicial = $("#cmbInicial").val();
@@ -255,4 +254,54 @@ function cerrarCaja(indice) {
 		$('#frmVentaProducto')[0].reset();
 		$('#txtCodigoProducto').focus();
 	});	
+}
+
+
+//USUARIOS: cargar los usuarios en la forma de buscar usuarios
+function cargarUsuariosPaginacion(txtUsuario, pagina) {
+	var usuario = txtUsuario;
+	
+	if(usuario.length>0) {
+		$.post("buscarUsuario.php", { txtUsuario: usuario, pag: pagina},
+		   function(data) {
+			 $('#divResultadosBusquedaUsuario').html(data);
+		   });
+	}   
+}
+
+function cargarResultadosDivUsuarios() {
+	var usuario = $("#txtUsuario").val();
+	
+	if(usuario.length>0) {
+		$.post("buscarUsuario.php", { txtUsuario: usuario},
+		   function(data) {
+			 $('#divResultadosBusquedaUsuario').html(data);
+			 $('#frmBuscarUsuario')[0].reset();
+		   });
+	}   
+}
+
+//funciones para cargar datos de sucursales
+function cargarResultadosDivSucursales() {
+	var sucursal = $("#txtSucursal").val();
+	
+	if(sucursal.length>0) {
+		$.post("buscarSucursal.php", { txtSucursal: sucursal},
+		   function(data) {
+			 $('#divResultadosBusquedaSucursal').html(data);
+			 $('#frmBuscarSucursal')[0].reset();
+		   });
+	}   
+}
+
+
+function cargarSucursalesPaginacion(txtSucursal, pagina) {
+	var sucursal = txtSucursal;
+	
+	if(sucursal.length>0) {
+		$.post("buscarSucursal.php", { txtSucursal: sucursal, pag: pagina},
+		   function(data) {
+			 $('#divResultadosBusquedaSucursal').html(data);
+		   });
+	}   
 }

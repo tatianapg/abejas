@@ -29,8 +29,8 @@ if(!$autenticacion->CheckLogin()) {
 			//<td>Editar</td><td>Eliminar</td>
 			//<td>Fe.registro</td><td>Fe.cierre</td>
 			echo("<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\" >");
-			echo("<tr><tr><td>Sucursal</td><td>Año</td><td>Fe.inicio</td><td>Fe.fin</td><td>Estado</td>
-			<td>Referencia</td><td>Resumen</td><td>Editar</td><td>Eliminar</td></tr>");
+			echo("<tr><td>Referencia</td><td>Sucursal</td><td>Año</td><td>Fe.inicio</td><td>Fe.fin</td><td>Estado</td>
+			<td>Nombre</td><td>Resumen</td><td>Editar</td><td>Eliminar</td></tr>");
 			$indice = 0;
 			foreach($res as $fila) {
 				if($indice%2)
@@ -39,6 +39,9 @@ if(!$autenticacion->CheckLogin()) {
 					$color = "#66d9ff";							
 
 				echo("<tr bgcolor=\"". $color ."\">");
+				//armar la referencia aqui
+				$referencia = "I-" . str_pad($fila["cd_sucursal"], '3', '0', STR_PAD_LEFT) . "-" . str_pad($fila["cd_inventario"], '3', '0', STR_PAD_LEFT);
+				echo "<td>" . $referencia . "</td>";
 				echo "<td>" . $fila["nm_sucursal"] . "</td>";
 				echo "<td>" . $fila["anio_fiscal_inventario"] . "</td>";
 				echo "<td>" . $fila["fe_inicio_inventario"] . "</td>";

@@ -168,7 +168,8 @@ class Autenticacion
         
         $consulta = "SELECT LOGIN_USUARIO, CD_USUARIO, ES_USUARIO_ADMIN, VER_INFO_SENSIBLE " .
 			" FROM BDD_SEGURIDADES.USUARIOS WHERE login_usuario = '$username' " .
-			" and clave_usuario = md5('$password')";
+			" and clave_usuario = md5('$password')" . 
+			" and esta_activo = 1 ";
         //echo $consulta;
 		
         $nresult = $pdo->pdoGetRow($consulta);
@@ -231,7 +232,7 @@ class Autenticacion
         $cadena = "<ul class=\"goo-collapsible goo-coll-stacked\">";
         $cadena .= "<li class=\"header\">Usuario: <b>". strtoupper($_SESSION["login_usuario"]) . "</b></li>";
         $cadena .= "<li class=\"header\">Sucursal: <b>". strtoupper($_SESSION['suc_nombre']) . "</b></li>";
-        $cadena .= "<li class=\"header\">Menú Principal</li>";
+        $cadena .= "<li class=\"header\"><b>Menú Principal</b></li>";
         $cadena .= "<li class=\"dropdown\">";
         $aux = "";
         

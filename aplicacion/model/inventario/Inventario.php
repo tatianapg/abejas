@@ -162,7 +162,7 @@ class Inventario {
     //buscar inventarios por anio
     function buscarInventariosPorAnio() {
         $sql = "select cd_inventario, nm_inventario, anio_fiscal_inventario, fe_inicio_inventario, " .
-		" fe_fin_inventario, cd_estado_sistema, fe_registro, fe_cierre, s.nm_sucursal " .
+		" fe_fin_inventario, cd_estado_sistema, fe_registro, fe_cierre, s.nm_sucursal, i.cd_sucursal " .
 		" from inventarios i, sucursales s where anio_fiscal_inventario >= 2000 " . 
 		" and i.cd_sucursal = " . $this->cd_sucursal .
 		" and s.cd_sucursal = i.cd_sucursal " .

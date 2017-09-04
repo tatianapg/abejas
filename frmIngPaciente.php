@@ -10,12 +10,20 @@ $(function() {
       // The key name on the left side is the name attribute
       // of an input field. Validation rules are defined
       // on the right side
-      txtNombres: "required",
-      txtApellidos: "required",
 	  cmbNivelAlergia: "required",
 	  cmbNivelDolor: "required",
  	  cmbSucursal: "required",
  	  cmbSexo: "required",
+	  
+	  txtApellidos: {
+		required: true,
+		alphanumeric: true
+	  },
+	  
+	  txtNombres: {
+		required: true,
+		alphanumeric: true
+	  },
 
 	  txtEdad: {
         required: true,
@@ -80,7 +88,10 @@ $(function() {
 	  	  
 	},  
     messages: {
-      txtNombres: "requerido",
+      txtNombres: { 
+		required: "requerido",
+		alphanumeric: "Solo letras y números."
+	  },
       txtApellidos: "requerido",
  	  cmbNivelAlergia: "requerido",
 	  cmbNivelDolor: "requerido",

@@ -260,9 +260,6 @@ class Producto {
 	
     //buscar productos por el nombre
     function buscarProductosPorNombre($inicio, $fin, $contarTodos) {
-		/*
-        $sql = "select cd_producto, nm_producto, sku_producto, cd_estado_sistema, substring(desc_producto, 1, 30) as desc_producto from productos where nm_producto like '%" . $this->nm_producto . "%' order by nm_producto" ;
-		*/
 		
         $sql = "select cd_producto, nm_producto, sku_producto, cd_estado_sistema, nm_categoria_producto ".
 		" from productos p, categorias_producto c " .
@@ -272,8 +269,7 @@ class Producto {
 		if(!$contarTodos) {
 			$sql .= " limit " . $inicio . ", " . $fin;
 		}
-		
-		
+				
         return $sql;
     }
     	

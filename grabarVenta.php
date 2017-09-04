@@ -51,6 +51,10 @@ if(!$autenticacion->CheckLogin()) {
 			$nombreCliente = "Consumidor final";
 			if(isset($_POST["txtCliente"]) && $_POST["txtCliente"] != "" ) {
 				$nombreCliente = $_POST["txtCliente"];
+				/* limpiar el nombre del cliente ya que puede contener mayores y menores y
+					esto da problema al imprimir con la librería PDF
+				*/
+				$nombreCliente = str_replace(array('<', '>'), '', $nombreCliente);
 			}
 			$subtotal = "0";
 			if(isset($_POST["txtSubtotal"]) && $_POST["txtSubtotal"] != 0 ) {
@@ -65,9 +69,19 @@ if(!$autenticacion->CheckLogin()) {
 				$descuento = $_SESSION["descuento"][0]["precio"];
 			
 			$aPagarComprobante = $subtotal - $descuento;
+			
+			//obtener el secuencial del comprobante
+			$sql = $comprobante->obtenerSecuencialComprobante();
+			$resultCodigo = $pdo->pdoGetRow($sql);
+			$ultimoIncrement = $resultCodigo["conteo"];
+			
+			//con este valor actualizo el código del comprobante
+			$codigoComprobante = str_pad($_SESSION["suc_venta"], 3, "0", STR_PAD_LEFT) . "-" . str_pad($ultimoIncrement, 7, "0", STR_PAD_LEFT);
+
 						
 			$comprobante->setComprobante(0, date("Y-m-d H:i:s"), $nombreCliente, "", $subtotal,
-			$descuento, $_SESSION["suc_venta"], $numItems, $_SESSION["cd_usuario"], $aPagarComprobante);						
+			$descuento, $_SESSION["suc_venta"], $numItems, $_SESSION["cd_usuario"], $aPagarComprobante,
+			$codigoComprobante);						
 			$sqlComprobante = $comprobante->crearComprobante();
 			
 			//////----- INICIAR TRANSACCIÓN PARA GUARDAR COMPROBANTE Y DETALLE AL MISMO TIEMPO -----
@@ -78,6 +92,7 @@ if(!$autenticacion->CheckLogin()) {
 				//echo "entro a la transaccion...";
 				$pdo->pdoInsertar($sqlComprobante);
 				$secuencialCabecera = $pdo->pdoLasInsertId();
+				
 														
 				//Inicio guardar el detalle de la venta
 				foreach($_SESSION["lista_productos"] as $fila) {
@@ -195,12 +210,14 @@ if(!$autenticacion->CheckLogin()) {
 				
 				//imprimir el total 
 				$totalFinal = $comprobante->getAPagarComprobante(); //$precioTotal - $descuento;
+				//echo "El TOTAL FINAL ES::: " . $totalFinal;
 														
 				if($insertados==$i) {
 					//si todo salió bien imprimir el mensaje;	
 					$tabla .= "<tr><td align=\"right\" bgcolor=\"#00FF00\" colspan=\"4\"><h2>TOTAL($)</h2></td><td align=\"right\"><h2>".number_format($totalFinal, 2, '.','')."</h2></td><td align=\"right\"><h1></h1></td></tr>";
 					//aquí crear un link para generar el reporte				
-					$tabla .= "<tr><td colspan=\"5\" bgcolor=\"#00FF00\"><h3><a href=\"#\" onclick=\"window.open('generarRecibo.php?rec=".$secuencialCabecera."')\">[Imprimir recibo de entrega No.".$secuencialCabecera."]</h3></a></td></tr></table>";				
+					//$tabla .= "<tr><td colspan=\"5\" bgcolor=\"#00FF00\"><h3><a href=\"#\" onclick=\"window.open('generarRecibo.php?rec=".$secuencialCabecera."')\">[Imprimir recibo de entrega No.".$secuencialCabecera."]</h3></a></td></tr></table>";				
+					$tabla .= "<tr><td colspan=\"5\" bgcolor=\"#00FF00\"><h3><a href=\"#\" onclick=\"window.open('generarRecibo.php?rec=".$secuencialCabecera."')\">[Imprimir recibo de entrega No.".$codigoComprobante."]</h3></a></td></tr></table>";				
 					$tabla .= "</table>";
 					echo ($tabla);
 				}

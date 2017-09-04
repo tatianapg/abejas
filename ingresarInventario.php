@@ -1,6 +1,7 @@
 <?php
 /* Ingresar el inventario y devolver una bandera de resultado
 */
+include("./aplicacion/controller/Controller.php");
 include("./aplicacion/model/inventario/Inventario.php");
 include("./aplicacion/bdd/PdoWrapper.php");
 require_once("./include/dabejas_config.php");
@@ -18,9 +19,11 @@ if(!$autenticacion->CheckLogin()) {
 	$cd_inventario, $cd_estado_sistema, $nm_inventario, $fe_registro,
 		$fe_inicio_inventario, $fe_fin_inventario, $anio_fiscal_inventario, $obs_inventario
 	*/
+	$nmInventario = reemplazarCaracteresEspeciales($_POST["txtNmInventario"]);
+	
 	$inventario = new Inventario();
 	$inventario->setCdSucursal($_SESSION["suc_venta"]);
-	$inventario->setInventario($_POST["txtCdInventario"], 1 , $_POST["txtNmInventario"], date('Y-m-d H:i:s'),
+	$inventario->setInventario($_POST["txtCdInventario"], 1 , $nmInventario, date('Y-m-d H:i:s'),
 	$_POST["txtFeInicioInventario"] , $_POST["txtFeFinInventario"],
 	$_POST["txtAnioFiscalInventario"], $_POST["txtObsInventario"], "", $_SESSION["suc_venta"]);
 

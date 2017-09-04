@@ -1,7 +1,8 @@
 <?php
-/* Ingresar el inventario y devolver una bandera de resultado
+/* Ingresar el usuario y devolver una bandera de resultado
 */
 include("./aplicacion/model/usuario/Usuario.php");
+include("./aplicacion/model/usuarioPerfil/usuarioPerfil.php");
 include("./aplicacion/bdd/PdoWrapper.php");
 require_once("./include/dabejas_config.php");
 
@@ -12,19 +13,23 @@ if(!$autenticacion->CheckLogin()) {
 } else {
 	////////////////////
 	$codigoUsuario = isset($_POST["txtCdUsuario"]) ? $_POST["txtCdUsuario"] : 0 ;
+	$verSensible = isset($_POST["ver_sensible"]) ? $_POST["ver_sensible"] : -1 ;
+	$esAdmin = isset($_POST["es_admin"]) ? $_POST["es_admin"] : -1 ;
+	$estado = $_POST["cmbEstado"];
 
 	//setear datos de producto; los valores de categoria, estado y unidad son por defecto 1
 	/*
 	function setUsuario($cd_usuario, $nm_usuario, $login_usuario, $clave_usuario, $email_usuario, 
 	$obs_usuario, $es_usuario_admin, $ver_info_sensible ,$esta_activo) {
 	*/
+	
+	$nombreUsuario = reemplazarCaracteresEspeciales($_POST["txtNmUsuario"]);
+	
 	$usuario = new Usuario();
-	$usuario->setCdUsuario($_POST["txtCdUsuario"]);
-	$usuario->setS
-	$inventario->setCdSucursal($_SESSION["suc_venta"]);
-	$inventario->setInventario($_POST["txtCdInventario"], 1 , $_POST["txtNmInventario"], date('Y-m-d H:i:s'),
-	$_POST["txtFeInicioInventario"] , $_POST["txtFeFinInventario"],
-	$_POST["txtAnioFiscalInventario"], $_POST["txtObsInventario"], "", $_SESSION["suc_venta"]);
+	$usuario->setUsuario($codigoUsuario, $nombreUsuario, $_POST["txtLogin"], $_POST["txtClave"],
+	"null", "null", $esAdmin, $verSensible, $estado);
+	
+	$usuPerfil =new UsuarioPerfil();
 
 	//establecer la conexión
 	$pdo = new PdoWrapper(); 
@@ -35,59 +40,55 @@ if(!$autenticacion->CheckLogin()) {
 		//1er caso, borrar producto
 		if(isset($_POST["del"]) && $_POST["del"] == 1) {
 			//echo "ingreso a eliminar";
-			$inventario->setCdInventario($codigoInventario);
-			$sqlEliminar = $inventario->eliminarInventario();
-			$numEliminados = $pdo->pdoInsertar($sqlEliminar);
-			$codigoInventario = 0;
+			$usuario->setCdUsuario($codigoUsuario);
+			$sqlEliminar = $usuario->eliminarUsuario();
+			//$numEliminados = $pdo->pdoInsertar($sqlEliminar);
+			//$codigoUsuario = 0;
 			$del = $_POST["del"];
 		} else {		
-			//es una tarea de ingresar, es nuevo, se crea un inventario
-			if(!$codigoInventario) {
-				/* se debe crear una transacción porque se crea el inventario y se desactiva el otro*/
-				//$con->beginTransaction();
+			//es una tarea de ingresar, es nuevo, se crea un usuario
+			if(!$codigoUsuario) {
+				
 				$conexion = $pdo->getConection();
 				$conexion->beginTransaction();
 				try {
-					//1. primero desactiva el inventario
-					//obtener inventario anterior
-					$sqlActivo = $inventario->validarExisteUnInventarioActivoPorSucursal();
-					$filaActivo = $pdo->pdoGetRow($sqlActivo);
-					$cdInventarioActivo = $filaActivo["cd_inventario"];	
-					//echo "El inventario anterior es: " . $cdInventarioActivo;
-					//actualizar el inventario anterior, si existe un inventario activo
-					/*si no existe el inventario no se hace nada, puede ser la primera vez que ingresa el inventario */
-					if($cdInventarioActivo) {
-						$inventario->setFeCierreAnterior(date('Y-m-d H:i:s'));
-						$inventario->setCdInventarioAnterior($cdInventarioActivo);
-						$sqlInactivar = $inventario->desactivarUltimoInventario();
-						echo ":::" .$sqlInactivar;
-						$numActualizados = $pdo->pdoInsertar($sqlInactivar);				
-					}
-					
-					//2. luego inserta nuevo inventario
-					$sql = $inventario->crearInventario();    			
-					$numInserts = $pdo->pdoInsertar($sql);
-					echo "Fueron insertadas: " . $numInserts;
-					$codigoInventario = $pdo->pdoLasInsertId();
-					
-					$conexion->commit();					
+					$sql = $usuario->crearUsuario();
+					$numInsertados = $pdo->pdoInsertar($sql);
+					$codigoUsuario = $pdo->pdoLasInsertId();
+					/* ingresar el perfil que tiene: como es ingreso nuevo va el código 0
+					luego internamente asigna el valor del auto_increment
+					*/
+					$usuPerfil->setUsuarioPerfil(0, $_POST["cmbPerfil"], $codigoUsuario);
+					$sql = $usuPerfil->crearUsuarioPerfil();
+					$numInsertados = $pdo->pdoInsertar($sql);				
+					$conexion->commit();
+				} catch(Exception $e) {
+					echo $e->getMessage();
+					$conexion->rollBack();
+				}	
+				
+			} else { 
+				//2do caso: es una actualizacion de datos con el codigo de usuario
+			
+				$conexion = $pdo->getConection();
+				$conexion->beginTransaction();
+				try {	
+					$usuario->setCdUsuario($codigoUsuario);
+					$sql = $usuario->modificarUsuario();
+					$numActualizados = $pdo->pdoInsertar($sql);
+					//modificar el perfil, si es que cambia
+					$usuPerfil->setCdUsuario($codigoUsuario);
+					$usuPerfil->setCdPerfil($_POST["cmbPerfil"]);
+					$sql = $usuPerfil->modificarUsuarioPerfil();
+					$numActualizados = $pdo->pdoInsertar($sql);
+					$conexion->commit();
 				} catch(Exception $e) {
 					echo $e->getMessage();
 					$conexion->rollBack();
 				}
-				
-				/* fin de la transacción*/
-			
-			} else { 
-				//2do caso: es una actualizacion de datos con el codigo de inventario
-				$inventario->setCdInventario($codigoInventario);
-				$sql = $inventario->modificarInventario();
-				//echo "La consulta es: " . $sql;
-				$numActualizados = $pdo->pdoInsertar($sql);
-				//echo "Fueron actualizadas: " . $numActualizados;
 			}
 		}	
-		$autenticacion->RedirectToURL("index.php?cdinv=" . $codigoInventario . "&del=" . $del .  "&nmi=" . $inventario->getNmInventario());
+		$autenticacion->RedirectToURL("index.php?cdusu=" . $codigoUsuario . "&del=" . $del .  "&nmu=" . $usuario->getLoginUsuario());
 
 	} //fin es conexion
 /////////////////

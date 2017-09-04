@@ -37,7 +37,7 @@ if(!$autenticacion->CheckLogin()) {
 
 	//$criterio = $_POST["cmbCriterio"]
 	if(isset($_POST["txtPro"])) {
-		$txtPro = $_POST["txtPro"];
+		$txtPro = reemplazarCaracteresEspeciales($_POST["txtPro"]);		
 	} 
 	$criterio = $_POST["cmbCriterio"];
 

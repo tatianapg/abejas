@@ -10,6 +10,7 @@ class Comprobante {
 	private $num_items_comprobante;
 	private $cd_usuario;
 	private $a_pagar_comprobante;
+	private $codigo_comprobante;
 	
 	//campos para ayudar al reporte
 	private $fe_reporte_inicio;
@@ -20,7 +21,7 @@ class Comprobante {
 	
 	function setComprobante($cd_cabecera, $fe_comprobante, $nm_cliente, $ci_cliente, $total_comprobante, 
 					$descuento_comprobante, $cd_sucursal, $num_items_comprobante, $cd_usuario, 
-					$a_pagar_comprobante) {
+					$a_pagar_comprobante, $codigo_comprobante) {
 		$this->cd_cabecera = $cd_cabecera;
 		$this->fe_comprobante = $fe_comprobante;		
 		$this->nm_cliente = $nm_cliente;
@@ -31,6 +32,7 @@ class Comprobante {
 		$this->num_items_comprobante = $num_items_comprobante;
 		$this->cd_usuario = $cd_usuario;
 		$this->a_pagar_comprobante = $a_pagar_comprobante;
+		$this->codigo_comprobante = $codigo_comprobante;
 	}
 	
 
@@ -41,13 +43,14 @@ class Comprobante {
 		if(!$this->a_pagar_comprobante) $this->a_pagar_comprobante = 0;		
 	}	
 	
-	function crearComprobante() {
+	function crearComprobante() {				
+		
 		$this->setDefaultNumeros();
 		
 		//$cons = "insert into comprobantes_cabecera(cd_cabecera, fe_comprobante, nm_cliente, ci_cliente, " . 
 		$cons = "insert into comprobantes_cabecera(fe_comprobante, nm_cliente, ci_cliente, " . 
 		" total_comprobante, descuento_comprobante, cd_sucursal, num_items_comprobante, cd_usuario, " .
-		" a_pagar_comprobante) " .
+		" a_pagar_comprobante, codigo_comprobante) " .
 		" values(" . 
 		//$this->cd_cabecera . ", " .
 		"'" . $this->fe_comprobante . "', " .
@@ -58,7 +61,8 @@ class Comprobante {
 		"" . $this->cd_sucursal . ", " .
 		"" . $this->num_items_comprobante . ", " .
 		"" . $this->cd_usuario . ", " .
-		"" . $this->a_pagar_comprobante . ")";
+		"" . $this->a_pagar_comprobante . ", " .
+		"'" . $this->codigo_comprobante . "')";
 		
 		//echo " crear sesion::: " .$cons;
 		return $cons;	
@@ -83,8 +87,17 @@ class Comprobante {
         $this->num_items_comprobante = $fila["NUM_ITEMS_COMPROBANTE"];        		
         $this->cd_usuario = $fila["CD_USUARIO"];        		
         $this->a_pagar_comprobante = $fila["A_PAGAR_COMPROBANTE"];        		
+        $this->codigo_comprobante = $fila["CODIGO_COMPROBANTE"];        				
     }
     
+	function setCodigoComprobante($codigo_comprobante) {
+		$this->codigo_comprobante = $codigo_comprobante;
+	}
+	
+	function getCodigoComprobante() {
+		return $this->codigo_comprobante;
+	}
+	
 	//haer metodos seter y geter
     function setCdCabecera($cd_cabecera) {
         $this->cd_cabecera = $cd_cabecera;
@@ -177,6 +190,19 @@ class Comprobante {
 	function getCdSucursal() {
 		return $this->cd_sucursal;
 	}
+	
+	function generarCodigoComprobante() {
+		$this->codigo_comprobante = str_pad($this->cd_sucursal, 3, "0", STR_PAD_LEFT) . "-" . 
+									str_pad($this->cd_cabecera, 7, "0");
+		echo $this->codigo_comprobante;
+	}
+	
+	function obtenerSecuencialComprobante() {
+		$sql = "select auto_increment as conteo from information_schema.TABLES " .
+			" where TABLE_SCHEMA='bdd_abejas' and TABLE_NAME ='comprobantes_cabecera'";
+		return $sql;		
+	}
+		
 		
 }
 ?>

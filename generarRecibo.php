@@ -104,11 +104,12 @@ if(!$autenticacion->CheckLogin()) {
 	generar datos para reporte
 	---------------------------------------------------------------------
 */	
+//$_GET["rec"]
 	$tblEntrega ="";
 
 	$tbl = "";	
 	$tbl .= "<table border=\"1\">";	
-	$tbl .= '<tr><td colspan="5"><b>RECIBO DE ENTREGA DE PRODUCTOS No. '.$_GET["rec"].'</b></td></tr>';
+	$tbl .= '<tr><td colspan="5"><b>RECIBO DE ENTREGA DE PRODUCTOS No. '.$comprobante->getCodigoComprobante().'</b></td></tr>';
 	
 	//<td><b>Unidades</b></td>
 	$tbl .= "<tr>";

@@ -37,7 +37,8 @@ if(!$autenticacion->CheckLogin()) {
 	$cmbCam = "";
 
 	if(isset($_POST["txtApe"]) && isset($_POST["cmbCam"])) {
-		$txtApe = $_POST["txtApe"];
+		
+		$txtApe = reemplazarCaracteresEspeciales($_POST["txtApe"]);
 		$cmbCam = $_POST["cmbCam"];
 	} 
 
@@ -58,7 +59,7 @@ if(!$autenticacion->CheckLogin()) {
 			
 			//setear campos para buscar pacientes
 			$paciente->setCampoBuscar($_POST["cmbCam"]);
-			$paciente->setApellidosPaciente($_POST["txtApe"]);
+			$paciente->setApellidosPaciente($txtApe);					
 			$sql = $paciente->buscarPacientesPorApellidos($inicio, $numRegPagina, 1);
 			//contar los registros totales de la consulta
 			$res = $pdo->pdoGetAll($sql);

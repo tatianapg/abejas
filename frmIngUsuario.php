@@ -2,6 +2,7 @@
 include("./aplicacion/bdd/PdoWrapper.php");
 include("./aplicacion/controller/Controller.php");
 include("./aplicacion/model/usuario/Usuario.php");
+include("./aplicacion/model/usuarioPerfil/usuarioPerfil.php");
 require_once("./include/dabejas_config.php");
 
 ?>
@@ -16,6 +17,8 @@ require_once("./include/dabejas_config.php");
 <script src="<?php echo getBaseUrl(); ?>js/jquery.js"></script>
 <script src="<?php echo getBaseUrl(); ?>js/jquery_validate.js"></script>
 <script src="<?php echo getBaseUrl(); ?>js/jquery-ui.min.js"></script>
+<script src="<?php echo getBaseUrl(); ?>js/additional-methods.min.js"></script>
+
 
 <script>
 $(function() {
@@ -27,29 +30,43 @@ $(function() {
       // The key name on the left side is the name attribute
       // of an input field. Validation rules are defined
       // on the right side
-      txtNmUsuario: "required",
+      txtNmUsuario: {
+		  required: true,
+		  alphanumeric: true
+	  },
 	  txtLogin: {
 		  required: true,
-		  minlength: 8
+		  minlength: 6,
+		  maxlength: 12,
+		  alphanumeric: true
 	  },	  
 	  cmbEstado: "required",
 	  txtClave: {
 		  required: true,
-		  minlength: 8
-	  }	  
+		  minlength: 8,
+		  alphanumeric: true
+	  },
+	  cmbPerfil: "required"
+	  
 	},  
     messages: {
-      txtNmUsuario: "requerido",
+      txtNmUsuario: {
+		required: "requerido",  
+		alphanumeric: "Solo letras y números."  
+	  },
 	  txtLogin: {
         required: "requerido",
-        minlength: "Al menos 8 caracteres."
-		  
+        minlength: "Al menos 6 caracteres.",
+		maxlength: "Hasta 12 caracteres.",
+		alphanumeric: "Solo letras y números."  
 	  },
 	  txtClave: {
         required: "requerido",
-        minlength: "Al menos 8 caracteres."		  
+        minlength: "Al menos 6 caracteres.",
+		alphanumeric: "Solo letras y números." 
 	  },
-	  cmbEstado: "requerido"
+	  cmbEstado: "requerido",
+	  cmbPerfil: "requerido"
 	  
     },
  
@@ -73,28 +90,53 @@ if(!$autenticacion->CheckLogin()) {
 				
 	$pdo = new PdoWrapper();
 	$con = $pdo->pdoConnect();
+		
 /////
-	$etiquetaBoton = "Ingresar";
-	//es eliminación de inventario, verificar antes si se puede eliminar
-	$habilitarBoton ="";
-	
-	
-	$usuario = new Usuario();
-
+	if($con) {
+		$etiquetaBoton = "Ingresar";
+		$usuario = new Usuario();
+		
+		//es eliminación de usuario, verificar antes si se puede eliminar
+		$habilitarBoton ="";		
+		$codigoUsuario = 0;
+		$cdPerfil = 0;
+		
+		if(isset($_GET["cdusu"]) && $_GET["cdusu"] > 0) {
+			$codigoUsuario = $_GET["cdusu"];
+			$etiquetaBoton = "Modificar";
+			
+			$usuario->setCdUsuario($codigoUsuario);
+			$sql = $usuario->consultarUsuario();
+			$fila = $pdo->pdoGetRow($sql);
+			$usuario->obtenerUsuario($fila);
+			
+			$usuPerfil =new UsuarioPerfil();
+			$usuPerfil->setCdUsuario($codigoUsuario);
+			$sql = $usuPerfil->consultarPerfilDadoUsuario();
+			$fila = $pdo->pdoGetRow($sql);
+			$cdPerfil = $fila["cd_perfil"];			
+		} 	
+	} else {
+		echo "error conexión bdd!!!";
+	}
 }
  
 ?>
 <form method="post" action="ingresarUsuario.php" name="frmIngUsuario" id="frmIngUsuario">
+<input type="hidden" name="txtCdUsuario" id="txtCdUsuario" value="<?php echo($codigoUsuario);?>"></input>
 <div>
 <fieldset><legend>Datos de Usuario</legend>
 <table>
 <tr>
 <td class="etiqueta">Nombre*</td><td><input name="txtNmUsuario" id="txtNmUsuario" value="<?php echo($usuario->getNmUsuario());?>"></input></td>
-<td class="etiqueta">Login*</td><td><input class="cajaCorta" name="txtLogin" id="txtLogin" value="<?php echo($usuario->getLoginUsuario());?>"></input></td>
+<td class="etiqueta">Login*</td><td><input name="txtLogin" id="txtLogin" value="<?php echo($usuario->getLoginUsuario());?>"></input></td>
 </tr>
 <tr>
 <td class="etiqueta">Clave*</td>
-<td><input class="cajaCorta" type="password" name="txtClave" id="txtClave" value="<?php echo($usuario->getClaveUsuario());?>"></input></td>
+<!-- 
+value="<?php echo($usuario->getClaveUsuario());?>"
+-->
+<td><input class="cajaCorta" type="password"  name="txtClave" id="txtClave"></input></td>
 <td class="etiqueta">Estado*</td><td>
 <select id="cmbEstado" name="cmbEstado">
 <option value="">Seleccione</option>
@@ -102,12 +144,27 @@ if(!$autenticacion->CheckLogin()) {
 <option value="-1" <?php if($usuario->getEstaActivo() == -1) echo "selected"; ?>>Inactivo</option>
 </select></td>
 </tr>
+<!--
 <tr>
-	<td><input class="checkbox" type="checkbox" name="ver_sensible" id="ver_sensible" value="sensible" <?php if($usuario->getVerInfoSensible() == 1) echo "checked";?>></td><td class="etiqueta">Ver datos sensibles?</td><td></td><td></td>
+<td><input class="checkbox" type="checkbox" name="es_admin" id="es_admin" value="1" <?php if($usuario->getEsUsuarioAdmin() == 1) echo "checked";?>></td><td class="etiqueta">Es administrador?</td><td></td><td></td>
+</tr>
+-->
+<tr><td class="etiqueta">Perfil*</td>
+<td>
+<select name="cmbPerfil" id="cmbPerfil">
+<option value="">Seleccione</option>
+<option value="1" <?php if($cdPerfil == 1) echo "selected"?>>Administrador</option>
+<option value="2" <?php if($cdPerfil == 2) echo "selected"?>>Supervisor</option>
+<option value="3" <?php if($cdPerfil == 3) echo "selected"?>>Vendedor</option>
+</select>
+</td>
 </tr>
 <tr>
-<td><input class="checkbox" type="checkbox" name="es_admin" id="es_admin" value="admin"></td><td class="etiqueta">Es administrador?</td><td></td><td></td>
+	<td><input class="checkbox" type="checkbox" name="ver_sensible" id="ver_sensible" value="1" <?php if($usuario->getVerInfoSensible() == 1) echo "checked";?>></td><td class="etiqueta">Ver datos sensibles?</td><td></td><td></td>
 </tr>
+
+<!--
+<tr>
 <td colspan="4">
 	<table>	
 	<tr>
@@ -119,6 +176,7 @@ if(!$autenticacion->CheckLogin()) {
 	</table>
 </td>
 </tr>
+-->
 </table>
 <p><input class="submit" type="submit" value="<?php echo($etiquetaBoton); ?>" name="btnUsuario" id="btnUsuario"><p>
 </fieldset>

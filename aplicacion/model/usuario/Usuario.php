@@ -25,6 +25,10 @@ class Usuario {
 		$this->ver_info_sensible = $ver_info_sensible;
 		$this->esta_activo = $esta_activo;
 	}
+	
+	function setNmUsuario($nm_usuario) {
+		$this->nm_usuario = $nm_usuario;
+	}
 
 	function getClaveUsuario() {
 		return $this->clave_usuario;
@@ -68,13 +72,13 @@ class Usuario {
 		"'" . $this->nm_usuario . "', " .
 		"'" . $this->login_usuario . "', " . 
 		" md5('" . $this->clave_usuario . "'), " . 
-		"null" . 
+		"null" . ", " .
 		"'" . $this->obs_usuario . "', " .
 		$this->es_usuario_admin . ", " . 
 		$this->ver_info_sensible . ", " . 
 		$this->esta_activo . ")";
 		
-		echo $sql;
+		//echo $sql;
 		return $sql;
 	}
 	
@@ -90,7 +94,7 @@ class Usuario {
 			" esta_activo = " . $this->esta_activo . 
 			" where cd_usuario = " . $this->cd_usuario;
 			
-		echo "modificar " . $sql;	
+		//echo "modificar " . $sql;	
 		return $sql;	
 	}
 	
@@ -111,8 +115,21 @@ class Usuario {
         $this->ver_info_sensible = $fila["VER_INFO_SENSIBLE"];
 		$this->esta_activo = $fila["ESTA_ACTIVO"];
 		
-    }
-	
-    	
+    }	 
+
+    function buscarUsuariosPorNombre($inicio, $fin, $contarTodos) {
+        $sql = "select u.cd_usuario, u.nm_usuario, u.login_usuario, p.nm_perfil, u.esta_activo, u.ver_info_sensible ".
+		" from bdd_seguridades.usuarios u, bdd_seguridades.usuario_perfiles up, bdd_seguridades.perfiles p " .
+		" where u.nm_usuario like '%" . $this->nm_usuario . "%' " .		
+		" and u.cd_usuario = up.cd_usuario " .
+		" and p.cd_perfil = up.cd_perfil " .
+		" order by u.nm_usuario ";
+		if(!$contarTodos) {
+			$sql .= " limit " . $inicio . ", " . $fin;
+		}
+		
+		//echo $sql;	
+        return $sql;		
+	}
 }
 ?>

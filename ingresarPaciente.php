@@ -1,6 +1,7 @@
 <?php
 /* Ingresar el paciente y devolver una bandera de resultado
 */
+include("./aplicacion/controller/Controller.php");
 include("./aplicacion/model/paciente/Paciente.php");
 include("./aplicacion/bdd/PdoWrapper.php");
 require_once("./include/dabejas_config.php");
@@ -11,13 +12,17 @@ if(!$autenticacion->CheckLogin()) {
 } else {
 
 	$codigoPaciente = isset($_POST["txtCdPaciente"]) ? $_POST["txtCdPaciente"] : 0 ;
+	
+	$ocupacion = reemplazarCaracteresEspeciales($_POST["txtOcupacion"]);
+	$direccion = reemplazarCaracteresEspeciales($_POST["txtDireccion"]);
+	$telefono = reemplazarCaracteresEspeciales($_POST["txtTelefono"]);
 
 	//setear datos de paciente
 	$paciente = new Paciente();
 	$paciente->setPaciente(
 	$_POST["txtCdPaciente"], 
 	$_POST["cmbSucursal"], $_POST["txtNombres"], $_POST["txtApellidos"], $_POST["txtEdad"], 
-	$_POST["txtOcupacion"], $_POST["txtTelefono"], $_POST["txtDireccion"], "", date("Y-m-d"),
+	$ocupacion, $telefono, $direccion, "", date("Y-m-d"),
 	$_POST["txtAntecedentesPersonales"], $_POST["txtAntecedentesFamiliares"], $_POST["txtCirugias"], $_POST["txtAlergias"], 
 	$_POST["txtMedicacionQuimica"], $_POST["txtMotivoConsulta"], $_POST["txtPeso"],  $_POST["txtTalla"], 
 	$_POST["txtPresion"], $_POST["txtDiagnostico"], $_POST["cmbNivelAlergia"], $_POST["txtFrecuenciaCardiaca"], 
