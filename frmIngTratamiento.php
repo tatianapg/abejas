@@ -11,44 +11,61 @@ require_once("./include/dabejas_config.php");
 <link rel="stylesheet" type="text/css" media="all" href="<?php echo getBaseUrl(); ?>css/style.css"/>
 <script src="<?php echo getBaseUrl(); ?>js/jquery.js"></script>
 <script src="<?php echo getBaseUrl(); ?>js/jquery_validate.js"></script>
-<script src="<?php echo getBaseUrl(); ?>js/validar_tratamiento.js"></script>
+
 
 <script type="text/javascript">
-   function validarTerapia() {
-   
-		var obs = document.getElementById("txtNotasSesion");
-		var texto = obs.value;
-		if(texto == '') {
-			alert('Ingrese las notas de la terapia.');
-			return false;
-		} else {
-			if(texto.length < 800)
-				return true;
-			else {	
-				alert('Ingrese solo 700 caracteres en notas de terapia.');
-				return false;
-			}	
-		}	
-	
-   }
-   
-   function validarMedicacion() {
-		var obs = document.getElementById("txtNotasMedicacion");
-		var texto = obs.value;
-		if(texto == '') {
-			alert('Ingrese la medicación.');
-			return false;
-		} else {
-			if(texto.length < 800)
-				return true;
-			else {
-				alert('Ingrese solo 700 caracteres en notas de medicación.');
-				return false;
-			}
-		}	
-   }
-   
-</script>
+$(function() {
+  // Initialize form validation on the registration form.
+  $("form[name='frmIngTratamiento']").validate({
+    // Specify validation rules
+    rules: {
+      // The key name on the left side is the name attribute
+      // of an input field. Validation rules are defined
+      // on the right side
+      txtNmTratamiento: {
+		required: true,
+		maxlength: 150	  		
+		},
+      txtMedicacionTratamiento: {
+		required: true,
+		maxlength: 700	  		
+	  },
+	  txtTerapiasTratamiento: {
+		number: true,
+        required: true,
+        minlength: 1,
+        maxlength: 2	  		
+	  },
+	  txtObsTratamiento: {
+		maxlength: 700	  		
+	  }
+	},  
+    messages: {
+		txtNmTratamiento: { 
+			required: "requerido",
+			maxlength: "Solo ingrese 150 caracteres"		
+		},
+		txtMedicacionTratamiento: {
+			required: "requerido",
+			maxlength: "Solo ingrese 700 caracteres"		
+		},
+		txtTerapiasTratamiento: {
+			number: "Ingrese un n&#250;mero correcto",
+			required: "requerido",
+			maxlength: "Número 1-99"
+		},
+		txtObsTratamiento: {
+			maxlength: "Solo ingrese 700 caracteres"		
+		}
+    },
+ 
+    // Make sure the form is submitted to the destination defined
+    // in the "action" attribute of the form when valid
+    submitHandler: function(form) {
+      form.submit();
+    }
+  });
+});
 </script>
 </head>
 <body>

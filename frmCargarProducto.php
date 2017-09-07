@@ -50,13 +50,13 @@ if(!$autenticacion->CheckLogin()) {
 	$accionSubtipo = "";
 	if(isset($_GET["c"]) && $_GET["c"] == 1) {
 		$tipoAccion = "1";
-		$etiqueta = "Compra para inventario/carga de producto";	
+		$etiqueta = "Carga de producto (Nuevas compras / devoluciones de cliente)";	
 		$accion = "Cargar producto?";
 		$accionSubtipo = "Carga";
 	}
 	if(isset($_GET["v"]) && $_GET["v"] == 1) {
 		$tipoAccion = "2";
-		$etiqueta = "Descarga de producto (caducidad / fallas empaque / gratuitades / devolución cliente)";	
+		$etiqueta = "Descarga de producto(caducidad / fallas empaque / gratuitades / retorno al proveedor)";	
 		$accion = "Descargar producto?";
 		$accionSubtipo = "Descarga";
 	}

@@ -1,4 +1,4 @@
-jQuery(document).ready(function(){
+jQuery(document).ready(function() {
 
 $(".goo-collapsible > li > a").on("click", function(e){
       
@@ -305,3 +305,39 @@ function cargarSucursalesPaginacion(txtSucursal, pagina) {
 		   });
 	}   
 }
+
+//estas funciones sirven para la pantalla de ingresar tratamiento
+   function validarTerapia() {
+   
+		var obs = document.getElementById("txtNotasSesion");
+		var texto = obs.value;
+		if(texto == '') {
+			alert('Ingrese las notas de la terapia.');
+			return false;
+		} else {
+			if(texto.length < 800)
+				return true;
+			else {	
+				alert('Ingrese solo 700 caracteres en notas de terapia.');
+				return false;
+			}	
+		}	
+	
+   }
+   
+   function validarMedicacion() {
+		var obs = document.getElementById("txtNotasMedicacion");
+		var texto = obs.value;
+		if(texto == '') {
+			alert('Ingrese la medicación.');
+			return false;
+		} else {
+			if(texto.length < 800)
+				return true;
+			else {
+				alert('Ingrese solo 700 caracteres en notas de medicación.');
+				return false;
+			}
+		}	
+   }
+   

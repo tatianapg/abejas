@@ -16,13 +16,12 @@ $(function() {
  	  cmbSexo: "required",
 	  
 	  txtApellidos: {
-		required: true,
-		alphanumeric: true
+		required: true
+		
 	  },
 	  
 	  txtNombres: {
-		required: true,
-		alphanumeric: true
+		required: true		
 	  },
 
 	  txtEdad: {
@@ -89,8 +88,8 @@ $(function() {
 	},  
     messages: {
       txtNombres: { 
-		required: "requerido",
-		alphanumeric: "Solo letras y números."
+		required: "requerido"
+		
 	  },
       txtApellidos: "requerido",
  	  cmbNivelAlergia: "requerido",

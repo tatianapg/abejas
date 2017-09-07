@@ -161,7 +161,7 @@ echo $combo;
 <tr>
 <?php 
 $costoProducto = "*******";
-if($banderaSensible)
+if($banderaSensible == 1)
 	$costoProducto = $producto->getCostoInternoProducto();
 ?>
 <td class="etiqueta">Costo/unidad</td><td><input class="cajaCorta" name="txtCostoInternoProducto" id="txtCostoInternoProducto" value="<?php echo ($costoProducto);?>"></td>
@@ -216,7 +216,7 @@ $skuLink = $producto->getSkuProducto();
 </div>
 </fieldset>
 </div>
-<?php if ($banderaSensible) { ?>
+<?php if ($banderaSensible == 1) { ?>
 <p><input class="submit" type="submit" name="btnProducto" id="btnProducto" value="<?php echo($etiquetaBoton); ?>" <?php echo($habilitarBoton); ?>><p>
 <?php } ?>
 </form>

@@ -77,7 +77,7 @@ $(function() {
 <form id="frmReportesInventario" name="frmReportesInventario" method="post" action="reportesPaciente.php" target="_blank">
 <div name='divBusqueda'>
 <fieldset>
-<legend>Reportes de productos</legend>
+<legend>Reportes de pacientes</legend>
 <table>
 <tr><td colspan="6"><b>Parámetros:</b></td></tr>
 <tr><td>Sucursal*</td><td><select class="combo" name="cmbSucursal" id="cmbSucursal">

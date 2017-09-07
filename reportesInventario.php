@@ -110,11 +110,14 @@ if(!$autenticacion->CheckLogin()) {
 	pero se asigna en el reporte de estado de inventario
 	*/	
 	$cdInventarioActivo = 0;
+	$banderaSensible = 0;
+	if(isset($_SESSION['ver_infosen'])  && $_SESSION['ver_infosen'] == 1)
+		$banderaSensible = 1;
  
 	/////////////////////////////////
 		//setear los parámetros para todos los reportes
 		$reporteAccion = new AccionProducto();
-		$reporteAccion->setDatoSensible($_SESSION['ver_infosen']);
+		$reporteAccion->setDatoSensible($banderaSensible);
 		$reporteAccion->setCdInventario($cdInventarioActivo);
 		$reporteAccion->setFeReporteDiarioInicio($feInicio . " 00:00:00");
 		$reporteAccion->setFeReporteDiarioFin($feFin . " 23:59:59"); //date('Y-m-d')
