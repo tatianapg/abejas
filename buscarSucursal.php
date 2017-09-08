@@ -69,7 +69,8 @@ if(!$autenticacion->CheckLogin()) {
 				
 				$indice++;
 				echo("<tr bgcolor=\"". $color ."\">");
-				echo "<td>" . ($indice + $inicio) . "</td>";
+				//echo "<td>" . ($indice + $inicio) . "</td>";
+				echo "<td>" . str_pad($fila["cd_sucursal"], '3', '0', STR_PAD_LEFT) . "</td>";
 				echo "<td>" . $fila["nm_sucursal"] . "</td>";
 				
 				echo "<td align=\"center\"><a href=\"#\" onclick=\"return loadQueryResults('frmIngSucursal.php?cdsuc=". $fila["cd_sucursal"] . "');\"><img src=\"images/updatei.png\" alt=\"Actualizar\"></a></td>";				

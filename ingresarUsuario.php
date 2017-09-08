@@ -1,6 +1,7 @@
 <?php
 /* Ingresar el usuario y devolver una bandera de resultado
 */
+include("./aplicacion/controller/Controller.php");
 include("./aplicacion/model/usuario/Usuario.php");
 include("./aplicacion/model/usuarioPerfil/usuarioPerfil.php");
 include("./aplicacion/bdd/PdoWrapper.php");

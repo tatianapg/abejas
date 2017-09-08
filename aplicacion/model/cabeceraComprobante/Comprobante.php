@@ -115,7 +115,7 @@ class Comprobante {
 				*/
 				//" u.login_usuario, s.nm_sucursal " .
 				" from comprobantes_cabecera " .
-				" where cd_cabecera = " . $this->cd_cabecera . 
+				" where cd_cabecera = '" . $this->cd_cabecera . "' " .
 				" and cd_sucursal = " . $this->cd_sucursal;
 		return $sql;
 	}	
@@ -202,7 +202,14 @@ class Comprobante {
 			" where TABLE_SCHEMA='bdd_abejas' and TABLE_NAME ='comprobantes_cabecera'";
 		return $sql;		
 	}
+	
+	function crearCabeceraDefectoPorSucursal() {
+		$sql = "insert into comprobantes_cabecera(cd_cabecera, fe_comprobante, total_comprobante, ".
+			"cd_sucursal, num_items_comprobante, cd_usuario, a_pagar_comprobante, codigo_comprobante) ".
+			" values(-1, '1900-01-01', -1, " . $this->cd_sucursal . ", -1, -1, -1, 'SIN COMPROBANTE')";
 		
-		
+		//echo "CABECERA DEFECTO:: " .$sql;
+		return $sql;			
+	}			
 }
 ?>

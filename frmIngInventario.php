@@ -101,8 +101,7 @@ if(!$autenticacion->CheckLogin()) {
 	$etiquetaBoton = "Ingresar";
 	//es eliminación de inventario, verificar antes si se puede eliminar
 	$habilitarBoton ="";
-	
-	
+		
 	/* Validar si existe un inventario activo POR SUCURSAL para no dejar ingresar otro*/
 	$numInventariosActivos = 0;
 	$cdInventarioActivo = 0;
@@ -137,6 +136,7 @@ if(!$autenticacion->CheckLogin()) {
 	$mensajeActivos .= "IMPORTANTE: Existe " . $numInventariosActivos . " inventario activo. " . $mensajeCaduco;
 		$mensajeActivos .= "<br>Al ingresar uno nuevo inventario, el anterior queda inactivo y todos los movimientos se asocian al nuevo inventario.";
 
+	$referencia="";	
 	//es modificacion de inventario
 	if(isset($_GET["cdinv"]) && $_GET["cdinv"] > 0) {
 		$etiquetaBoton = "Modificar";
@@ -147,6 +147,7 @@ if(!$autenticacion->CheckLogin()) {
 		if($con) {
 			$fila = $pdo->pdoGetRow($sql);
 			$inventario->obtenerInventario($fila);
+			$referencia = "INV-" . str_pad($inventario->getCdSucursal(), '3', '0', STR_PAD_LEFT) . "-" . str_pad($inventario->getCdInventario(), '3', '0', STR_PAD_LEFT);
 		} else {
 			echo "error conexión bdd!!!";
 		}    
@@ -183,6 +184,8 @@ if(!$autenticacion->CheckLogin()) {
 <fieldset><legend>Datos de Inventario</legend>
 <table>
 <tr>
+<td class="etiqueta" colspan="1">Referencia: </td><td><b><?php echo($referencia);?></b></td>
+</tr>
 <td class="etiqueta">Nombre*</td><td><input name="txtNmInventario" id="txtNmInventario" value="<?php echo($inventario->getNmInventario());?>"></input></td>
 <td class="etiqueta">A&#241;o Fiscal*</td><td><input class="cajaCorta" name="txtAnioFiscalInventario" id="txtAnioFiscalInventario" value="<?php echo($inventario->getAnioFiscalInventario());?>"></td><td></td></input>
 </tr>

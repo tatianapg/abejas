@@ -32,18 +32,14 @@ $(function() {
       txtNmSucursal: {
 		  required: true,
 		  maxlength: 20,
-		  minlength: 6,
-		  number: false,
-		  alphanumeric: true
+		  minlength: 5
 	  }
 	},  
     messages: {
       txtNmSucursal: {
 		  required: "requerido",
 		  maxlength: "Hasta 20 caracteres.",
-		  minlength: "Al menos 6 caracteres.",
-		  number: "Solo letras",
-		  alphanumeric: "Solo letras y números."
+		  minlength: "Al menos 6 caracteres."
 	  } 
     },
  

@@ -40,7 +40,7 @@ if(!$autenticacion->CheckLogin()) {
 
 				echo("<tr bgcolor=\"". $color ."\">");
 				//armar la referencia aqui
-				$referencia = "I-" . str_pad($fila["cd_sucursal"], '3', '0', STR_PAD_LEFT) . "-" . str_pad($fila["cd_inventario"], '3', '0', STR_PAD_LEFT);
+				$referencia = "INV-" . str_pad($fila["cd_sucursal"], '3', '0', STR_PAD_LEFT) . "-" . str_pad($fila["cd_inventario"], '3', '0', STR_PAD_LEFT);
 				echo "<td>" . $referencia . "</td>";
 				echo "<td>" . $fila["nm_sucursal"] . "</td>";
 				echo "<td>" . $fila["anio_fiscal_inventario"] . "</td>";

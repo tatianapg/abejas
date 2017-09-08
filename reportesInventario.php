@@ -238,8 +238,10 @@ if(!$autenticacion->CheckLogin()) {
 				 ************ Tercera parte: descuentos efectuadas
 				 ********************************************
 				*/
-				$comprobante = new Comprobante();
-				$comprobante->setCdUsuario($cdUsuario);
+				$comprobante = new Comprobante();				
+				if($cdUsuario)
+					$comprobante->setCdUsuario($_SESSION["cd_usuario"]);
+
 				$comprobante->setCdSucursal($cdSucursal);
 				$comprobante->setFeReporteInicio($feInicio . " 00:00:00");
 				$comprobante->setFeReporteFin($feFin . " 23:59:59");			
@@ -354,7 +356,7 @@ if(!$autenticacion->CheckLogin()) {
 					$sql = $reporteAccion->obtenerNombresStock();
 					$resultProductos = $pdo->pdoGetAll($sql);
 					$tbl = "";
-					///$tbl .= "<table><tr><td>".$sql."</td></tr></table>";	
+					//$tbl .= "<table><tr><td colspan=\"7\">".$sql."</td></tr></table>";	
 					
 					//4. obtener el inventario inicial
 					$sql = $reporteAccion->obtenerIInicialStock();

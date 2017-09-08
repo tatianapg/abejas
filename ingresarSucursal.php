@@ -3,6 +3,7 @@
 */
 include("./aplicacion/controller/Controller.php");
 include("./aplicacion/model/sucursal/Sucursal.php");
+include("./aplicacion/model/cabeceraComprobante/Comprobante.php");
 include("./aplicacion/bdd/PdoWrapper.php");
 require_once("./include/dabejas_config.php");
 
@@ -56,10 +57,27 @@ if(!$autenticacion->CheckLogin()) {
 		} else {		
 			//es una tarea de ingresar, es nuevo, se crea un usuario
 			if(!$codigoSucursal) {
-				//validar nombre repetido									
-				$sql = $sucursal->crearSucursal();
-				$numInsertados = $pdo->pdoInsertar($sql);
-				$codigoSucursal = $pdo->pdoLasInsertId();				
+				//validar nombre repetido	
+				//hacer una transaccion para que se cree la sucursal y se inserte la cabecera por defecto
+				$conexion = $pdo->getConection();
+				$conexion->beginTransaction();
+				try {
+				///
+					$sql = $sucursal->crearSucursal();
+					$numInsertados = $pdo->pdoInsertar($sql);
+					$codigoSucursal = $pdo->pdoLasInsertId();				
+					//cuando inserta la sucursal debe insertarse una cabecera en los comprobantes
+					$comprobante = new Comprobante();
+					$comprobante->setCdSucursal($codigoSucursal);
+					$sql = $comprobante->crearCabeceraDefectoPorSucursal();
+					$numCabecera = $pdo->pdoInsertar($sql);
+					$codigoCabecera = $pdo->pdoLasInsertId();
+					$conexion->commit();				
+				///
+				} catch(Exception $e) {
+					echo $e->getMessage();
+					$conexion->rollBack();
+				}
 			} else { 
 				//2do caso: es una actualizacion de datos con el codigo de sucursal			
 				$sucursal->setCdSucursal($codigoSucursal);

@@ -329,7 +329,7 @@ class AccionProducto {
 		$sql = "select p.nm_producto as nombre, p.sku_producto as codigo, a.precio_accion as precio, " .
 				" a.cantidad_accion as cantidad, a.cd_cabecera " .
 				" from acciones_producto a, productos p " .
-				" where a.cd_cabecera = " . $this->cd_cabecera . 
+				" where a.cd_cabecera = '" . $this->cd_cabecera . "' " .
 				" and a.cd_sucursal = " . $this->cd_sucursal .
 				" and a.cd_producto = p.cd_producto ";	
 		//echo "consultar última venta: " . $sql;

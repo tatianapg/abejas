@@ -31,14 +31,12 @@ $(function() {
       // of an input field. Validation rules are defined
       // on the right side
       txtNmUsuario: {
-		  required: true,
-		  alphanumeric: true
+		  required: true
 	  },
 	  txtLogin: {
 		  required: true,
 		  minlength: 6,
-		  maxlength: 12,
-		  alphanumeric: true
+		  maxlength: 12
 	  },	  
 	  cmbEstado: "required",
 	  txtClave: {
@@ -51,14 +49,12 @@ $(function() {
 	},  
     messages: {
       txtNmUsuario: {
-		required: "requerido",  
-		alphanumeric: "Solo letras y números."  
+		required: "requerido"  
 	  },
 	  txtLogin: {
         required: "requerido",
         minlength: "Al menos 6 caracteres.",
-		maxlength: "Hasta 12 caracteres.",
-		alphanumeric: "Solo letras y números."  
+		maxlength: "Hasta 12 caracteres."
 	  },
 	  txtClave: {
         required: "requerido",
