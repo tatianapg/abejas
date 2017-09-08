@@ -247,8 +247,11 @@ class AccionProducto {
 			   " and ap.cd_sucursal = " . $this->cd_sucursal .
 			   " and ap.cd_tipo_accion = 1 " .
 			   " and ap.es_carga_inicial = 1 " .
+  			   " where " .
+			   " a.cd_inventario = " . $this->cd_inventario . 
+			   " and a.cd_sucursal = " . $this->cd_sucursal .
 			   " group by a.cd_producto " .
-			   "order by a.cd_producto";
+			   " order by a.cd_producto";
 		return $sql;
 	}
 	
@@ -257,7 +260,8 @@ class AccionProducto {
 	estas compras no son carga inicial
 	*/		
 	function obtenerComprasStock() {
-		$sql = "select a.cd_producto, sum(ap.cantidad_accion) cantidad_compras, sum(ap.cantidad_accion * ap.precio_accion) as valor_compras " .
+		$sql = "select a.cd_producto, sum(ap.cantidad_accion) cantidad_compras, " .
+			   " sum(ap.cantidad_accion * ap.precio_accion) as valor_compras " .
 			   " from aux_acciones a left outer join acciones_producto ap on a.cd_producto = ap.cd_producto " .
 			   " and a.cd_inventario = ap.cd_inventario " . 
 			   " and a.cd_sucursal = ap.cd_sucursal " .			   
@@ -265,6 +269,9 @@ class AccionProducto {
 			   " and ap.cd_sucursal = " . $this->cd_sucursal .
 			   " and ap.cd_tipo_accion = 1 " .
 			   " and ap.es_carga_inicial = 0 " .
+   			   " where " . 
+			   " a.cd_inventario = " . $this->cd_inventario . 
+			   " and a.cd_sucursal = " . $this->cd_sucursal .
 			   " group by a.cd_producto " .
 			   " order by a.cd_producto";
 		return $sql;
@@ -277,11 +284,14 @@ class AccionProducto {
 		$sql = "select a.cd_producto, sum(ap.cantidad_accion) cantidad_ventas, sum(ap.cantidad_accion * ap.precio_accion) as valor_ventas " .
 			   " from aux_acciones a left outer join acciones_producto ap on a.cd_producto = ap.cd_producto " .
 			   " and a.cd_inventario = ap.cd_inventario " . 
-			   " and a.cd_sucursal = ap.cd_sucursal " .			   			   
+			   " and a.cd_sucursal = ap.cd_sucursal " .		
 			   " and ap.cd_inventario = " . $this->cd_inventario .
 			   " and ap.cd_sucursal = " . $this->cd_sucursal .
 			   " and ap.cd_tipo_accion = 2 " .
 			   " and ap.es_carga_inicial = 0 " .
+			   " where ".
+			   " a.cd_inventario = " . $this->cd_inventario . 
+			   " and a.cd_sucursal = " . $this->cd_sucursal .
 			   " group by a.cd_producto " .
 			   " order by a.cd_producto";
 		return $sql;

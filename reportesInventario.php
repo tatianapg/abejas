@@ -350,29 +350,31 @@ if(!$autenticacion->CheckLogin()) {
 					//2. insertar codigos del inventario actual
 					$sql = $reporteAccion->insertarCodigosStock();
 					$numInsertados = $pdo->pdoInsertar($sql);	
+					//$tbl .= "<table><tr><td colspan=\"7\">1 LIMPIAR CODIGOS: ".$sql."</td></tr></table>";	
 					
 					
 					//3. obtener codigos y nombres de productos	
 					$sql = $reporteAccion->obtenerNombresStock();
 					$resultProductos = $pdo->pdoGetAll($sql);
 					$tbl = "";
-					//$tbl .= "<table><tr><td colspan=\"7\">".$sql."</td></tr></table>";	
+					//$tbl .= "<table><tr><td colspan=\"7\">OBTENER PRODUCTOS: ".$sql."</td></tr></table>";	
+					//echo "Los productos: " . $sql;
 					
 					//4. obtener el inventario inicial
 					$sql = $reporteAccion->obtenerIInicialStock();
 					$resultIInicial = $pdo->pdoGetAll($sql);	
-					//$tbl .= "<table><tr><td colspan=\"7\">".$sql."</td></tr></table>";		
+					//$tbl .= "<table><tr><td colspan=\"7\">INV.INICIAL: ".$sql."</td></tr></table>";		
 
 					//5. obtener las compras
 					$sql = $reporteAccion->obtenerComprasStock();
 					$resultCompras = $pdo->pdoGetAll($sql);	
-					///$tbl .= "<table><tr><td>".$sql."</td></tr></table>";	
+					//$tbl .= "<table><tr><td colspan=\"7\">COMPRAS: ".$sql."</td></tr></table>";	
 					
 					//6. obtener las ventas
 					$sql = $reporteAccion->obtenerVentasStock();
 					$resultVentas = $pdo->pdoGetAll($sql);	
-					///$tbl .= "<table><tr><td>".$sql."</td></tr></table>";		
-					//$tbl = "<table><tr><td>del ".$sql."</td></tr></table>";
+					//echo "LAS VENTAS:: " . $sql;
+					//$tbl = "<table><tr><td colspan=\"7\">VENTAS: ".$sql."</td></tr></table>";
 					
 					/* considerar el número de productos que se recuperaron
 					
@@ -402,40 +404,40 @@ if(!$autenticacion->CheckLogin()) {
 						$tbl .= "<td>".($i+1)."</td>";
 						$tbl .= "<td>" . $resultProductos[$i]["sku_producto"] . "</td>";
 						$tbl .= "<td>" . $resultProductos[$i]["nm_producto"] . "</td>";
-						if($resultProductos[$i]["cd_producto"] == $resultIInicial[$i]["cd_producto"]) {				
-							if(!$resultIInicial[$i]["cantidad_inicial"])
-								$iinicial = 0;
-							else
-								$iinicial = $resultIInicial[$i]["cantidad_inicial"];				
-							//$tbl .= "<td align=\"right\">" . $resultIInicial[$i]["cantidad_inicial"] . "</td>";
-							$tbl .= "<td align=\"right\">" . $iinicial . "</td>";
-							$sumaIInicial += $iinicial;
-						}	
-						if($resultProductos[$i]["cd_producto"] == $resultCompras[$i]["cd_producto"]) {
+						
+						$iinicial = 0;
+						if($resultIInicial && $resultIInicial[$i] && ($resultProductos[$i]["cd_producto"] == $resultIInicial[$i]["cd_producto"])) {				
+							if($resultIInicial[$i]["cantidad_inicial"])
+								$iinicial = $resultIInicial[$i]["cantidad_inicial"];
+						}		
+						$tbl .= "<td align=\"right\">" . $iinicial . "</td>";
+						$sumaIInicial += $iinicial;
 							
-							if (!$resultCompras[$i]["cantidad_compras"]) {
-								$compras = 0;
-							} else
-								$compras = $resultCompras[$i]["cantidad_compras"];
-							$tbl .= "<td align=\"right\">" . $compras . "</td>";
-							$sumaCompras += $compras;
-						}	
-						if($resultProductos[$i]["cd_producto"] == $resultVentas[$i]["cd_producto"]) {
-							if(!$resultVentas[$i]["cantidad_ventas"])
-								$ventas = 0;
-							else
+						
+						$compras = 0;
+						if($resultCompras && $resultCompras[$i] && ($resultProductos[$i]["cd_producto"] == $resultCompras[$i]["cd_producto"])) {							
+							if ($resultCompras[$i]["cantidad_compras"]) 
+								$compras = $resultCompras[$i]["cantidad_compras"];														
+						}
+						$tbl .= "<td align=\"right\">" . $compras . "</td>";
+						$sumaCompras += $compras;
+
+						
+						$ventas = 0;
+						if($resultVentas && $resultVentas[$i] && ($resultProductos[$i]["cd_producto"] == $resultVentas[$i]["cd_producto"])) {
+							if($resultVentas[$i]["cantidad_ventas"])
 								$ventas = $resultVentas[$i]["cantidad_ventas"];
+						}									
+						$tbl .= "<td align=\"right\">" . $ventas . "</td>";
+						$sumaVentas += $ventas;
 							
-							$tbl .= "<td align=\"right\">" . $ventas . "</td>";
-							$sumaVentas += $ventas;
-						}	
 						//calcular el inventario final
 						$ifinal = $iinicial + $compras - $ventas;
 						$tbl .= "<td align=\"right\">" . $ifinal . "</td>";
 						$tbl .= "</tr>";
 						
 						$sumaIFinal += $ifinal;
-					}
+					} //fin for de productos
 					//$tbl .= "</table>";
 					
 					//colocar una fila con los totales al final
