@@ -38,7 +38,8 @@ if(!$autenticacion->CheckLogin()) {
 		$problemas .= "T";	
 	}
 	//validar tipos de imagenes
-	if($tipoImagen != "jpg" && $tipoImagen != "png" && $tipoImagen != "jpeg" && $tipoImagen != "gif" ) {
+	if($tipoImagen != "jpg" && $tipoImagen != "png" && $tipoImagen != "jpeg" && $tipoImagen != "gif" 
+		&& $tipoImagen != "jpe") {
 		echo "Solo se admiten tipos: JPG, JPEG, PNG y GIF";
 		$upload = 0;
 		$problemas .= "F";		

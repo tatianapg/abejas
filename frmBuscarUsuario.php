@@ -43,6 +43,7 @@ $(function() {
 <label>Nombre a buscar*:</label>
 <input type="textbox" id="txtUsuario" name="txtUsuario"></input>
 <input class="submit" type="button" value="Buscar Usuarios" id="enviarConsulta" onclick="cargarResultadosDivUsuarios();">
+(Ingrese % para todos)
 </fieldset>
 </div>
 </form>

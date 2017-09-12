@@ -175,7 +175,7 @@ if($banderaSensible == 1)
 <option value="-1" <?php if($producto->getCdEstadoSistema() == -1) echo "selected";  ?>>Inactivo</option>
 </select></td>
 <td class="etiqueta">Imagen del producto</td><td>
-<input type="file" name="fileFotoProducto" id="fileFotoProducto"><div class="etiqueta">Tipos im&#225;genes JPG, JPEG, PNG y GIF.  Tama&#241;o m&#225;ximo: 1 Kb</div>
+<input type="file" name="fileFotoProducto" id="fileFotoProducto"><div class="etiqueta">Tipos: JPG, JPE, JPEG, PNG, GIF.  Max: 1500 Kb</div>
 </td></tr>
 </tr>
 </table>

@@ -58,7 +58,7 @@ $(function() {
 	  },
 	  txtClave: {
         required: "requerido",
-        minlength: "Al menos 6 caracteres.",
+        minlength: "Al menos 8 caracteres.",
 		alphanumeric: "Solo letras y números." 
 	  },
 	  cmbEstado: "requerido",
