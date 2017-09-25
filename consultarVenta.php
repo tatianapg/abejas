@@ -43,11 +43,19 @@ if(!$autenticacion->CheckLogin()) {
 
 			if($res) {
 				//solo si existe el comprobante se hacen consultas de usuario y sucursal
+				//cambiar la base de datos para validar usuario
+				$sql = $pdo->cambiarBdd();
+				$pdo->pdoExecute($sql);
+
 				$usuario = new Usuario();
 				$usuario->setCdUsuario($comprobante->getCdUsuario());
 				$sql = $usuario->consultarUsuario();
 				$res = $pdo->pdoGetRow($sql);
 				$usuario->obtenerUsuario($res);
+
+				//cambiar a base de app
+				$sql = $pdo->cambiarBddApp();
+				$pdo->pdoExecute($sql);
 				
 				$sucursal = new Sucursal();
 				$sucursal->setCdSucursal($comprobante->getCdSucursal());

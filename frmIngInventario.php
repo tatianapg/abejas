@@ -185,6 +185,7 @@ if(!$autenticacion->CheckLogin()) {
 <table>
 <tr>
 <td class="etiqueta" colspan="1">Referencia: </td><td><b><?php echo($referencia);?></b></td>
+<td class="etiqueta">Sucursal</td><td><b><?php echo($_SESSION["suc_nombre"]);?></b></td>
 </tr>
 <td class="etiqueta">Nombre*</td><td><input name="txtNmInventario" id="txtNmInventario" value="<?php echo($inventario->getNmInventario());?>"></input></td>
 <td class="etiqueta">A&#241;o Fiscal*</td><td><input class="cajaCorta" name="txtAnioFiscalInventario" id="txtAnioFiscalInventario" value="<?php echo($inventario->getAnioFiscalInventario());?>"></td><td></td></input>

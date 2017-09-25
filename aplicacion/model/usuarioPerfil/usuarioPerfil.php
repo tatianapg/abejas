@@ -34,7 +34,7 @@ class UsuarioPerfil {
 	}
 		    	
 	function crearUsuarioPerfil() {
-		$sql = "insert into bdd_seguridades.usuario_perfiles(cd_usuario_perfil, cd_perfil, cd_usuario) values( " . 
+		$sql = "insert into usuario_perfiles(cd_usuario_perfil, cd_perfil, cd_usuario) values( " . 
 		$this->cd_usuario_perfil . ", " .
 		$this->cd_perfil . ", " .
 		$this->cd_usuario . ")";		
@@ -42,7 +42,7 @@ class UsuarioPerfil {
 	}
 	
 	function modificarUsuarioPerfil() {
-		$sql = "update bdd_seguridades.usuario_perfiles set " .
+		$sql = "update usuario_perfiles set " .
 			" cd_perfil = '" . $this->cd_perfil . "' " .
 			" where cd_usuario = " . $this->cd_usuario;			
 		//echo "modificar " . $sql;	
@@ -51,7 +51,7 @@ class UsuarioPerfil {
 	
 	//devuelve el perfil de usuario
     function consultarPerfilDadoUsuario() {
-        $cons = "select cd_perfil from bdd_seguridades.usuario_perfiles where cd_usuario = " . $this->cd_usuario;
+        $cons = "select cd_perfil from usuario_perfiles where cd_usuario = " . $this->cd_usuario;
         return $cons;
     }
 

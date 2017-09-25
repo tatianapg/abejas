@@ -14,10 +14,13 @@ if(!$autenticacion->CheckLogin())
     //hace consulta de los elementos a los que tiene acceso:
     $pdo = new PdoWrapper();
     $con = $pdo->pdoConnect();
+	$sql = $pdo->cambiarBdd();
+	$pdo->pdoExecute($sql);
+
                          
     if($con) {
         //obtener la consulta de los permisos
-        $autenticacion = new Autenticacion();
+        //$autenticacion = new Autenticacion();
         $sql = $autenticacion->obtenerPermisosUsuario($cdUsuario);
         //hacer la consulta
         $res = $pdo->pdoGetAll($sql);    

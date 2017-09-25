@@ -23,6 +23,11 @@ if(!$autenticacion->CheckLogin()) {
 	function setUsuario($cd_usuario, $nm_usuario, $login_usuario, $clave_usuario, $email_usuario, 
 	$obs_usuario, $es_usuario_admin, $ver_info_sensible ,$esta_activo) {
 	*/
+	//establecer la conexión
+	$pdo = new PdoWrapper(); 
+	$con = $pdo->pdoConnect();
+	$sql = $pdo->cambiarBdd();
+	$pdo->pdoExecute($sql);
 	
 	$nombreUsuario = reemplazarCaracteresEspeciales($_POST["txtNmUsuario"]);
 	
@@ -30,14 +35,22 @@ if(!$autenticacion->CheckLogin()) {
 	$usuario->setUsuario($codigoUsuario, $nombreUsuario, $_POST["txtLogin"], $_POST["txtClave"],
 	"null", "null", $esAdmin, $verSensible, $estado);
 	
+	//validar que el login del usuario sea unico
+	$sqlValidar = $usuario->validarNombreRepetido();
+	$fila = $pdo->pdoGetRow($sqlValidar);
+	$numUsu = $fila["conteo"];
+	$es_correcto = 1;
+	if($numUsu) {
+		echo "El nombre del usuario es repetido.";
+		$es_correcto = 0;
+		$codigoUsuario = -1;
+	}
+	
+	
 	$usuPerfil =new UsuarioPerfil();
 
-	//establecer la conexión
-	$pdo = new PdoWrapper(); 
-	$con = $pdo->pdoConnect();
-
 	$del=0;
-	if($con) {
+	if($con && $es_correcto) {
 		//1er caso, borrar producto
 		if(isset($_POST["del"]) && $_POST["del"] == 1) {
 			//echo "ingreso a eliminar";
@@ -89,9 +102,11 @@ if(!$autenticacion->CheckLogin()) {
 				}
 			}
 		}	
-		$autenticacion->RedirectToURL("index.php?cdusu=" . $codigoUsuario . "&del=" . $del .  "&nmu=" . $usuario->getLoginUsuario());
+		
 
 	} //fin es conexion
+	
+	$autenticacion->RedirectToURL("index.php?cdusu=" . $codigoUsuario . "&del=" . $del .  "&nmu=" . $usuario->getLoginUsuario());
 /////////////////
 }
 

@@ -42,6 +42,7 @@ $(function() {
 <legend>B&#250;squeda de inventario</legend>
 <label>A&#241;o del inventario*</label><input name="txtAnioBuscar" id="txtAnioBuscar">
 <input class="submit" type="button" value="Buscar Inventarios" id="enviarConsulta" onclick="cargarResultadosDivInventarios();">
+<label>(Ingrese 1 para buscar todos)</label>
 </fieldset>
 </div>
 </form>

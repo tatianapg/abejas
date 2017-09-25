@@ -71,7 +71,7 @@ if(!$autenticacion->CheckLogin()) {
 			$aPagarComprobante = $subtotal - $descuento;
 			
 			//obtener el secuencial del comprobante
-			$sql = $comprobante->obtenerSecuencialComprobante();
+			$sql = $comprobante->obtenerSecuencialComprobante($pdo->getDbApp());
 			$resultCodigo = $pdo->pdoGetRow($sql);
 			$ultimoIncrement = $resultCodigo["conteo"];
 			

@@ -39,10 +39,6 @@ if(!$autenticacion->CheckLogin()) {
 		$codigoSucursal = -1;
 	}
 	
-	//establecer la conexión
-	$pdo = new PdoWrapper(); 
-	$con = $pdo->pdoConnect();
-
 	$del=0;
 	if($con && $es_correcto) {
 		//1er caso, borrar producto

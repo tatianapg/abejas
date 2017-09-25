@@ -14,10 +14,12 @@ if(!$autenticacion->CheckLogin())
     //hace consulta de los elementos a los que tiene acceso:
     $pdo = new PdoWrapper();
     $con = $pdo->pdoConnect();
+	$sql = $pdo->cambiarBdd();
+	$pdo->pdoExecute($sql);
                          
     if($con) {
         //obtener la consulta de los permisos
-        $autenticacion = new Autenticacion();
+        //$autenticacion = new Autenticacion();
         $sql = $autenticacion->obtenerPermisosUsuario($cdUsuario);
         //hacer la consulta
         $res = $pdo->pdoGetAll($sql);    
@@ -32,6 +34,10 @@ if(isset($_GET["del"]) && $_GET["del"] == 1) {
 	$texto = "Usuario eliminado: ";
 } else
 	$texto = "Usuario ingresado: ";
+
+if(isset($_GET["cdusu"]) && $_GET["cdusu"] == -1) {
+	$texto = "El login del usuario es repetido.";
+}
 
 ?>
 <div id="marco">

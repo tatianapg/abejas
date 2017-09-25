@@ -138,7 +138,7 @@ if(!$autenticacion->CheckLogin()) {
 				//en primera instancia son ventas cobras (accion, subtipo/ 2, 5 / ventas, venta cliente final)
 				$reporteAccion->setCdTipoAccion(2);
 				$reporteAccion->setCdSubtipoAccion(5);
-				$sql = $reporteAccion->generarResumenDiarioVentas();
+				$sql = $reporteAccion->generarResumenDiarioVentas($pdo->getDbSeguridad());
 				$result = $pdo->pdoGetAll($sql);	
 
 				/*
@@ -191,7 +191,7 @@ if(!$autenticacion->CheckLogin()) {
 				*/
 				$reporteAccion->setCdTipoAccion(1);
 				$reporteAccion->setCdSubtipoAccion(4);
-				$sql = $reporteAccion->generarResumenDiarioVentas();
+				$sql = $reporteAccion->generarResumenDiarioVentas($pdo->getDbSeguridad());
 				$result = $pdo->pdoGetAll($sql);	
 				$tbl .= '<table border="1">';
 				//$tbl .= '<tr><td colspan="9">'.$sql.'</td></tr>';
@@ -269,7 +269,7 @@ if(!$autenticacion->CheckLogin()) {
 				
 				//si quiere obtener todos los movimientos o solo de un tipo: compras(1) o ventas(2)
 				//hacer la consulta para el reporte
-				$sql = $reporteAccion->generarDetalleMovimientos();
+				$sql = $reporteAccion->generarDetalleMovimientos($pdo->getDbSeguridad());
 				$result = $pdo->pdoGetAll($sql);	
 
 				//inicio de generación de reporte	

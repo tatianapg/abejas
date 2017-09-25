@@ -22,6 +22,9 @@ if(!$autenticacion->CheckLogin()) {
 
 	$pdo = new PdoWrapper();
 	$con = $pdo->pdoConnect();
+	$sql = $pdo->cambiarBdd();
+	$pdo->pdoExecute($sql);	
+
 	//para paginacion
 	$numRegPagina = 10;
 	$pagina = 0;

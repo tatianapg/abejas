@@ -66,8 +66,8 @@ class Usuario {
 		return $this->ver_info_sensible;
 	}
 	    	
-	function crearUsuario() {
-		$sql = "insert into bdd_seguridades.usuarios(cd_usuario, nm_usuario, login_usuario, clave_usuario, email_usuario, obs_usuario, es_usuario_admin, ver_info_sensible, esta_activo) values( " . 
+	function crearUsuario() {		
+		$sql = "insert into usuarios(cd_usuario, nm_usuario, login_usuario, clave_usuario, email_usuario, obs_usuario, es_usuario_admin, ver_info_sensible, esta_activo) values( " . 
 		$this->cd_usuario . ", " .
 		"'" . $this->nm_usuario . "', " .
 		"'" . $this->login_usuario . "', " . 
@@ -83,7 +83,7 @@ class Usuario {
 	}
 	
 	function modificarUsuario() {
-		$sql = "update bdd_seguridades.usuarios set " .
+		$sql = "update usuarios set " .
 			" nm_usuario = '" . $this->nm_usuario . "', " .
 			" login_usuario = '" . $this->login_usuario . "', " . 
 			" clave_usuario = md5('" . $this->clave_usuario . "'), " .
@@ -99,7 +99,7 @@ class Usuario {
 	}
 	
     function consultarUsuario() {
-        $cons = "select * from bdd_seguridades.usuarios where cd_usuario = " . $this->cd_usuario;
+        $cons = "select * from usuarios where cd_usuario = " . $this->cd_usuario;
         return $cons;
     }
 
@@ -119,7 +119,7 @@ class Usuario {
 
     function buscarUsuariosPorNombre($inicio, $fin, $contarTodos) {
         $sql = "select u.cd_usuario, u.nm_usuario, u.login_usuario, p.nm_perfil, u.esta_activo, u.ver_info_sensible ".
-		" from bdd_seguridades.usuarios u, bdd_seguridades.usuario_perfiles up, bdd_seguridades.perfiles p " .
+		" from usuarios u, usuario_perfiles up, perfiles p " .
 		" where u.nm_usuario like '%" . $this->nm_usuario . "%' " .		
 		" and u.cd_usuario = up.cd_usuario " .
 		" and p.cd_perfil = up.cd_perfil " .
@@ -131,5 +131,12 @@ class Usuario {
 		//echo $sql;	
         return $sql;		
 	}
+	
+	function validarNombreRepetido() {
+		$sql = "select count(1) as conteo from usuarios where login_usuario = '" . $this->login_usuario . "'";
+
+		return $sql;
+	}
+
 }
 ?>

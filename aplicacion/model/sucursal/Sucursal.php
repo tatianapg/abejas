@@ -80,7 +80,7 @@ class Sucursal {
 	}
 	
 	function buscarSucursalesPorNombre($inicio, $fin, $contarTodos) {
-		$sql = "select cd_sucursal, nm_sucursal from bdd_abejas.sucursales " . 
+		$sql = "select cd_sucursal, nm_sucursal from sucursales " . 
 			" where nm_sucursal like '%" . $this->nm_sucursal . "%'" . 
 			" order by nm_sucursal";
 			

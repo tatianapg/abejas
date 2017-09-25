@@ -37,8 +37,17 @@ class Autenticacion
     {
         $this->sitename = 'localhost';
         $this->rand_key = '0iQx5oBk66oVZep';
+		
     }
     
+	function setDatabase($database) {
+		$this->database = $database;
+	}
+	
+	function getDatabase() {
+		return $this->database;
+	}
+	
     
     function SetRandomKey($key)
     {
@@ -164,10 +173,10 @@ class Autenticacion
         $numFilas = 0;
         $consulta = "";
 		
-        $username = $this->SanitizeForSQL($username);
+        $username = $this->SanitizeForSQL($username);		
         
         $consulta = "SELECT LOGIN_USUARIO, CD_USUARIO, ES_USUARIO_ADMIN, VER_INFO_SENSIBLE " .
-			" FROM BDD_SEGURIDADES.USUARIOS WHERE login_usuario = '$username' " .
+			" FROM USUARIOS WHERE login_usuario = '$username' " .
 			" and clave_usuario = md5('$password')" . 
 			" and esta_activo = 1 ";
         //echo $consulta;
@@ -216,14 +225,12 @@ class Autenticacion
 	
     function obtenerPermisosUsuario($cdUsuario) {
         $sql = "select e.nm_entidad as entidad, a.nm_accion as accion, a.forma_accion as forma " . 
-               " from bdd_seguridades.entidades e, bdd_seguridades.usuario_perfiles up, " .
-			   " bdd_seguridades.perfil_acciones pa, bdd_seguridades.acciones a  " . 
+               " from entidades e, usuario_perfiles up, " .
+			   " perfil_acciones pa, acciones a  " . 
                " where up.cd_usuario =  " . $cdUsuario .
-               //" and up.cd_usuario = u.cd_usuario and " .
                " and up.cd_perfil = pa.cd_perfil and " .
                " a.cd_accion = pa.cd_accion and " . 
                " a.cd_entidad = e.cd_entidad " . 
-               //" p.cd_perfil = up.cd_perfil " .
                " order by e.orden_entidad, a.orden_accion";               
         return $sql;       
     }

@@ -78,13 +78,20 @@ if(!$autenticacion->CheckLogin()) {
 	$descuento = $comprobante->getDescuentoComprobante();	
 	$totalPagar = $comprobante->getAPagarComprobante();
 		
-	//consultar usuario y sucursal
+	//consultar usuario
+	$sql = $pdo->cambiarBdd();
+	$pdo->pdoExecute($sql);
+
 	$usuario = new Usuario();
 	$usuario->setCdUsuario($comprobante->getCdUsuario());
 	$sql = $usuario->consultarUsuario();
 	$res = $pdo->pdoGetRow($sql);
 	$usuario->obtenerUsuario($res);
-			
+	
+	//	consulta sucursal
+	$sql = $pdo->cambiarBddApp();
+	$pdo->pdoExecute($sql);
+	
 	$sucursal = new Sucursal();
 	$sucursal->setCdSucursal($comprobante->getCdSucursal());
 	$sql = $sucursal->consultarSucursal();

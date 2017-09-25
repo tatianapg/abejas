@@ -10,9 +10,11 @@ if(!$autenticacion->CheckLogin()) {
 	$autenticacion->RedirectToURL("login.php");
     exit;
 } else {
+	//establecer la conexión
+	$pdo = new PdoWrapper(); 
+	$con = $pdo->pdoConnect();	
 
-	$codigoPaciente = isset($_POST["txtCdPaciente"]) ? $_POST["txtCdPaciente"] : 0 ;
-	
+	$codigoPaciente = isset($_POST["txtCdPaciente"]) ? $_POST["txtCdPaciente"] : 0 ;	
 	$ocupacion = reemplazarCaracteresEspeciales($_POST["txtOcupacion"]);
 	$direccion = reemplazarCaracteresEspeciales($_POST["txtDireccion"]);
 	$telefono = reemplazarCaracteresEspeciales($_POST["txtTelefono"]);
@@ -28,10 +30,7 @@ if(!$autenticacion->CheckLogin()) {
 	$_POST["txtPresion"], $_POST["txtDiagnostico"], $_POST["cmbNivelAlergia"], $_POST["txtFrecuenciaCardiaca"], 
 	$_POST["cmbNivelDolor"], $_POST["txtCedula"], $_POST["txtEmbarazos"], $_POST["txtPartos"], $_POST["txtCesareas"], $_POST["txtAbortos"], $_POST["cmbSexo"] );
 
-	//establecer la conexión
-	$pdo = new PdoWrapper(); 
-	$con = $pdo->pdoConnect();
-
+		
 	$del=0;
 	if($con) {
 		//1er caso, es una eliminación de paciente	

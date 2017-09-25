@@ -122,7 +122,7 @@ class AccionProducto {
 	/* esta consulta permite obtener todos los movimientos (grupos grandes: compras o ventas) realizados
 	en una fecha, o entre fechas.
 	*/
-	function generarDetalleMovimientos() {
+	function generarDetalleMovimientos($bddSeguridad) {
 		//verificar si existe sucursal
 		$condicionSucursal = "";
 		if($this->cd_sucursal != -1 && $this->cd_sucursal != '')
@@ -149,7 +149,7 @@ class AccionProducto {
 		$sql = "select p.nm_producto, p.sku_producto, a.cantidad_accion cantidad, a.precio_accion as precio, " .
 			   " (a.cantidad_accion * a.precio_accion) as ingreso, a.fe_accion as fe_ultima_compra, " . 
 			   " s.nm_sucursal, t.nm_tipo_accion as nm_subtipo, u.login_usuario, a.cd_cabecera " .
-			   " from acciones_producto a, productos p, sucursales s, tipos_accion t, bdd_seguridades.usuarios u " .
+			   " from acciones_producto a, productos p, sucursales s, tipos_accion t, ". $bddSeguridad.".usuarios u " .
 			   " where " .
 			   //cambio_inventario
 			   $condicionInventario .
@@ -365,7 +365,7 @@ class AccionProducto {
 	generar una consulta con las devoluciones	
 	*/
 	
-	function generarResumenDiarioVentas() {
+	function generarResumenDiarioVentas($bddSeguridad) {
 		//verificar si existe sucursal
 		$condicionSucursal = "";
 		if($this->cd_sucursal != -1 && $this->cd_sucursal != '')
@@ -398,7 +398,7 @@ class AccionProducto {
 			   " (sum(a.cantidad_accion) * a.precio_accion) as ingreso, " .
 			   " ((sum(a.cantidad_accion) * a.costo_accion)* ".$this->dato_sensible.") as costo, " .
 			   " s.nm_sucursal, u.login_usuario " .
-			   " from acciones_producto a, productos p, sucursales s, bdd_seguridades.usuarios u " .
+			   " from acciones_producto a, productos p, sucursales s, ".$bddSeguridad.".usuarios u " .
 			   " where " .
 			   ///cambio_inventario
 			   $condicionInventario .

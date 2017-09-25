@@ -197,9 +197,9 @@ class Comprobante {
 		echo $this->codigo_comprobante;
 	}
 	
-	function obtenerSecuencialComprobante() {
+	function obtenerSecuencialComprobante($baseApp) {
 		$sql = "select auto_increment as conteo from information_schema.TABLES " .
-			" where TABLE_SCHEMA='bdd_abejas' and TABLE_NAME ='comprobantes_cabecera'";
+			" where TABLE_SCHEMA='".$baseApp."' and TABLE_NAME ='comprobantes_cabecera'";
 		return $sql;		
 	}
 	

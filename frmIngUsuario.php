@@ -86,6 +86,8 @@ if(!$autenticacion->CheckLogin()) {
 				
 	$pdo = new PdoWrapper();
 	$con = $pdo->pdoConnect();
+	$sql = $pdo->cambiarBdd();
+	$pdo->pdoExecute($sql);	
 		
 /////
 	if($con) {

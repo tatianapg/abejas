@@ -14,8 +14,7 @@ if(!$autenticacion->CheckLogin()) {
 	$codigo = $_POST['cmbSucursal'];
 
 	$cdUsuario = (isset($_SESSION['cd_usuario']) ? $_SESSION['cd_usuario'] : 0);
-	echo "el codigo del usuario es: " . $cdUsuario;
-
+	//echo "el codigo del usuario es: " . $cdUsuario;
 
 	$sucursal = new Sucursal();
 	$sucursal->setCdSucursal($codigo);

@@ -7,6 +7,8 @@ if(isset($_POST['submitted']))
 	/* Obtener un objeto conexión y pasarlo para que haga login*/
 	$pdo = new PdoWrapper();
 	$con = $pdo->pdoConnect();
+	$sql = $pdo->cambiarBdd();
+	$pdo->pdoExecute($sql);
 
 	if($con) {
 	   if($autenticacion->Login($pdo))
