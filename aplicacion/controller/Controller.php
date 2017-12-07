@@ -46,4 +46,8 @@ function construirComboSoloDatos($result) {
 	return $cadena;	
 }
 
+function reemplazarCaracteresEspeciales($cadena) {
+	$cadenaLimpia = str_replace(array('<', '>', '{', '}', '[', ']', '\'', '"', '´')	, '', $cadena);
+	return $cadenaLimpia;
+}
 ?>

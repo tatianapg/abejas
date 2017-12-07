@@ -4,8 +4,9 @@ class PdoWrapper {
     private $con;
     private $sql;
     private $pdoError;
-    public $numFilas;
-    
+    private $dbSeguridad;
+	private $dbApp;
+	
     /* cuando es igual a 1 se debe incluir el archivo con los nombres de las columnas*/
     public $useTableCols = 0;
     /* usar formatero para el datadumper */
@@ -15,10 +16,17 @@ class PdoWrapper {
     }
     
     
-    function pdoConnect($server, $username, $password, $database) {
+	//funcion para conectar a la base de datos
+    function pdoConnect() {
+    //function pdoConnect($server, $username, $password, $database) {
         
         try {
-            $this->con = new PDO("mysql:dbname=$database; host=$server", $username, $password);
+			$config = parse_ini_file('config_abe.ini'); 
+			$this->dbApp = $config['dbapp'];
+			$this->dbSeguridad = $config['dbseguridad'];
+            //$this->con = new PDO("mysql:dbname=$database; host=$server", $username, $password);			
+            $this->con = new PDO("mysql:dbname=".$config['dbapp']."; host=" . $config['server'], $config['username'], $config['password']);
+			
         } catch(PDOException $e) {            
             $this->pdoException($e->getMessage());
             exit;
@@ -30,6 +38,14 @@ class PdoWrapper {
 	
 	function getConection() {
 		return $this->con;
+	}
+	
+	function getDbSeguridad() {
+		return $this->dbSeguridad;
+	}
+	
+	function getDbApp() {
+		return $this->dbApp;
 	}
     
     
@@ -59,16 +75,6 @@ class PdoWrapper {
         return $rows;
     }
     
-    /*
-    function pdoGetAssoc($query, $array=array()) {
-        $rows = $this->pdoGetAll($query, $array);
-        foreach($rows as $row) {
-            $idx = array_shift($row);
-            $rows_assoc[$idx] = $row;
-        } 
-        return $rows_assoc;
-    }
-    */
     
     function pdoGetRow($query) {
         $stmt = $this->pdoExecute($query);
@@ -178,7 +184,18 @@ class PdoWrapper {
         echo "<br>========== ERROR EN ACCESO A BASE DE DATOS ==========<br>";
         echo "<a href=\"login.php\">Ir al inicio</a>";        
     } 
-    
+	
+	
+	/* La única base por la que podemos cambiar es la base de seguridades */
+	function cambiarBdd() {
+		$sql = "use " . $this->dbSeguridad;
+		return $sql;			
+	}
+	
+	function cambiarBddApp() {
+		$sql = "use " . $this->dbApp;
+		return $sql;
+	}
     
 }
 

@@ -9,8 +9,6 @@ if(!$autenticacion->CheckLogin())
     exit;
 } else {
     //con el código del usuario se pasa a obtener los menúes
-    //echo "el login en sesion es: " . $_SESSION["login_usuario"];
-    //echo "el usuario en sesion es: " . $_SESSION["cd_usuario"];
     $cdUsuario = (isset($_SESSION['cd_usuario']) ? $_SESSION['cd_usuario'] : 0);
     
     //hace consulta de los elementos a los que tiene acceso:
@@ -18,7 +16,7 @@ if(!$autenticacion->CheckLogin())
     $con = $pdo->pdoConnect();
 	$sql = $pdo->cambiarBdd();
 	$pdo->pdoExecute($sql);
-	
+                         
     if($con) {
         //obtener la consulta de los permisos
         //$autenticacion = new Autenticacion();
@@ -33,15 +31,19 @@ if(!$autenticacion->CheckLogin())
 }
 
 if(isset($_GET["del"]) && $_GET["del"] == 1) {
-	$texto = "Producto eliminado: ";
+	$texto = "Usuario eliminado: ";
 } else
-	$texto = "Producto ingresado: ";
+	$texto = "Usuario ingresado: ";
+
+if(isset($_GET["cdusu"]) && $_GET["cdusu"] == -1) {
+	$texto = "El login del usuario es repetido.";
+}
 
 ?>
 <div id="marco">
   <div id="ladoIzquierdo"><?php echo($cadena) ;?>  
   </div>
-  <div id="ladoDerecho"><?php echo($texto);?><a href="" onClick="return loadQueryResults('frmIngProducto.php?cdpro=<?php echo($_GET["cdpro"])?>');"><?php echo($_GET["nmp"] . " - " . $_GET["cdpro"])?></a></div>
+  <div id="ladoDerecho"><?php echo($texto);?><a href="" onClick="return loadQueryResults('frmIngUsuario.php?cdusu=<?php echo($_GET["cdusu"])?>');"><?php echo($_GET["nmu"] . " - " . $_GET["cdusu"])?></a></div>
 </div>
 </body>
 </html>

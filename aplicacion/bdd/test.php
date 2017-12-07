@@ -5,8 +5,7 @@ $pdo = new PdoWrapper();
 
 echo "cree el wrapper";
 
-//$conOk=$pdo->pdoConnect("146.148.106.56", "root", "nQk9sl0o", "bdd_seguridades");
-$conOk=$pdo->pdoConnect("localhost", "tatianag", "Cpsr19770428", "bdd_abejas");
+$conOk=$pdo->pdoConnect();
 
 echo "cree la conexion";
 

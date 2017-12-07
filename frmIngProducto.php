@@ -3,6 +3,8 @@ include("./aplicacion/bdd/PdoWrapper.php");
 include("./aplicacion/controller/Controller.php");
 include("./aplicacion/model/producto/Producto.php");
 include("./aplicacion/model/categoria/Categoria.php");
+require_once("./include/dabejas_config.php");
+
 ?>
 
 <html>
@@ -73,57 +75,64 @@ $(function() {
 <body>
 <?php
 
-$etiquetaBoton = "Ingresar";
-$producto = new Producto();
-$pdo = new PdoWrapper();
-$con = $pdo->pdoConnect("localhost", "tatianag", "Cpsr19770428", "bdd_abejas");
+if(!$autenticacion->CheckLogin()) {
+	$autenticacion->RedirectToURL("login.php");
+    exit;
+} else {
 
-//es modificacion de paciente
-if(isset($_GET["cdpro"]) && $_GET["cdpro"] > 0) {
-	$etiquetaBoton = "Modificar";
-
-    //echo "existe paciente";
-	$producto->setCdProducto($_GET["cdpro"]);
-    $sql = $producto->consultarProducto();        
-
-    if($con) {
-        $fila = $pdo->pdoGetRow($sql);
-        $producto->obtenerProducto($fila);
-    } else {
-        echo "error conexión bdd!!!";
-    }    
-}
-
-//es eliminación de producto, verificar antes si se puede eliminar
-$habilitarBoton ="";
-if(isset($_GET["del"]) && $_GET["del"] == 1 ) {
-	$etiquetaBoton = "Eliminar";	
-	//aqui mismo validar si hay chance de eliminar
-	//si tiene tratamientos no se elimina
-	$producto->setCdProducto($_GET["cdpro"]);
-	$sqlValidacion = $producto->validarEliminarProducto();
+	/////
+	//si tiene la bandera sensible entonces puede ver el costo|
+	$banderaSensible = $_SESSION['ver_infosen'];
 	
-	$resultAcciones = $pdo->pdoGetRow($sqlValidacion);
-	$numAcciones = $resultAcciones["conteo"];
-	//deshabilitar el botón porque existen datos asociados al producto
-	if($numAcciones > 0) {
-		//echo "se deshabilita el boton por " . $numAcciones;
-		$habilitarBoton = "disabled";		
-	}	
+	$etiquetaBoton = "Ingresar";
+	$producto = new Producto();
+	$pdo = new PdoWrapper();
+	$con = $pdo->pdoConnect();
+
+	//es modificacion de paciente
+	if(isset($_GET["cdpro"]) && $_GET["cdpro"] > 0) {
+		$etiquetaBoton = "Modificar";
+
+		//echo "existe paciente";
+		$producto->setCdProducto($_GET["cdpro"]);
+		$sql = $producto->consultarProducto();        
+
+		if($con) {
+			$fila = $pdo->pdoGetRow($sql);
+			$producto->obtenerProducto($fila);
+		} else {
+			echo "error conexión bdd!!!";
+		}    
+	}
+
+	//es eliminación de producto, verificar antes si se puede eliminar
+	$habilitarBoton ="";
+	if(isset($_GET["del"]) && $_GET["del"] == 1 ) {
+		$etiquetaBoton = "Eliminar";	
+		//aqui mismo validar si hay chance de eliminar
+		//si tiene tratamientos no se elimina
+		$producto->setCdProducto($_GET["cdpro"]);
+		$sqlValidacion = $producto->validarEliminarProducto();
+		
+		$resultAcciones = $pdo->pdoGetRow($sqlValidacion);
+		$numAcciones = $resultAcciones["conteo"];
+		//deshabilitar el botón porque existen datos asociados al producto
+		if($numAcciones > 0) {
+			//echo "se deshabilita el boton por " . $numAcciones;
+			$habilitarBoton = "disabled";		
+		}	
+	}
+
+	//recuperar las categorias
+	$categoria = new Categoria();
+	$sql = $categoria->getTodasCategorias();
+
+	if($con) {
+		$result = $pdo->pdoGetAll($sql);
+		$combo = construirCombo($result, $producto->getCdCategoriaProducto());
+	}
+	////
 }
-
-//recuperar las categorias
-$categoria = new Categoria();
-$sql = $categoria->getTodasCategorias();
-
-if($con) {
-	$result = $pdo->pdoGetAll($sql);
-	$combo = construirCombo($result, $producto->getCdCategoriaProducto());
-}
-
-//echo "en frmingresar:: ";
-//var_dump($producto);
-//echo ":::::::" .  $producto->getNombresProducto() . "::::::::::::::";
 ?>
 <form method="post" action="ingresarProducto.php" name="frmIngProducto" id="frmIngProducto" enctype="multipart/form-data">
 <input type="hidden" name="txtCdProducto" value="<?php echo($producto->getCdProducto()); ?>"></input>
@@ -150,7 +159,12 @@ echo $combo;
 <td class="etiqueta">Stock m&#237;nimo</td><td><input class="cajaCorta" name="txtStockMinimoProducto" id="txtStockMinimoProducto" value="<?php echo($producto->getStockMinimoProducto());?>"></td>
 </tr>
 <tr>
-<td class="etiqueta">Costo/unidad</td><td><input class="cajaCorta" name="txtCostoInternoProducto" id="txtCostoInternoProducto" value="<?php echo($producto->getCostoInternoProducto());?>"></td>
+<?php 
+$costoProducto = "*******";
+if($banderaSensible == 1)
+	$costoProducto = $producto->getCostoInternoProducto();
+?>
+<td class="etiqueta">Costo/unidad</td><td><input class="cajaCorta" name="txtCostoInternoProducto" id="txtCostoInternoProducto" value="<?php echo ($costoProducto);?>"></td>
 <td class="etiqueta">Precio/unidad*</td><td><input class="cajaCorta" name="txtPrecioProducto" id="txtPrecioProducto" value="<?php echo($producto->getPrecioProducto());?>"></td>
 </tr>
 <tr>
@@ -161,7 +175,7 @@ echo $combo;
 <option value="-1" <?php if($producto->getCdEstadoSistema() == -1) echo "selected";  ?>>Inactivo</option>
 </select></td>
 <td class="etiqueta">Imagen del producto</td><td>
-<input type="file" name="fileFotoProducto" id="fileFotoProducto"><div class="etiqueta">Tipos im&#225;genes JPG, JPEG, PNG y GIF.  Tama&#241;o m&#225;ximo: 1 Kb</div>
+<input type="file" name="fileFotoProducto" id="fileFotoProducto"><div class="etiqueta">Tipos: JPG, JPE, JPEG, PNG, GIF.  Max: 1500 Kb</div>
 </td></tr>
 </tr>
 </table>
@@ -199,15 +213,12 @@ $skuLink = $producto->getSkuProducto();
 }
 ?>
 <div>
-
 </div>
 </fieldset>
 </div>
-
-<!-- sección de imágenes -->
-
-<!-- -->
+<?php if ($banderaSensible == 1) { ?>
 <p><input class="submit" type="submit" name="btnProducto" id="btnProducto" value="<?php echo($etiquetaBoton); ?>" <?php echo($habilitarBoton); ?>><p>
+<?php } ?>
 </form>
 </body>
 </html>

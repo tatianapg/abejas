@@ -1,4 +1,4 @@
-jQuery(document).ready(function(){
+jQuery(document).ready(function() {
 
 $(".goo-collapsible > li > a").on("click", function(e){
       
@@ -86,11 +86,11 @@ function cargarResultadosDivProductos() {
 	}   
 }
 
-function cargarProductosPaginacion(txtPro, pagina) {
+function cargarProductosPaginacion(txtPro, pagina, criterio) {
 	var producto = txtPro;
 	
 	if(producto.length>0) {
-		$.post("buscarProducto.php", { txtPro: producto, pag: pagina},
+		$.post("buscarProducto.php", { txtPro: producto, pag: pagina, cmbCriterio: criterio},
 		   function(data) {
 			 $('#divResultadosBusquedaProducto').html(data);
 			 //$('#frmBuscarProducto')[0].reset();
@@ -118,7 +118,6 @@ function cargarResultadosDivCargarProducto() {
 
 	var codigo = $("#txtCodigoProducto").val();
 	var cantidad = $("#txtCantidadAccion").val();
-	//var sucursal = $("#cmbSucursal").val();
 	var subtipo = $("#cmbSubtipo").val();
 	var accion = $("#txtTipoAccion").val();
 	var inicial = $("#cmbInicial").val();
@@ -202,6 +201,7 @@ function grabarVenta() {
 
 /* permite ingresar un descuento*/
 function ingresarDescuento() {
+
 	var descuento = $("#txtDescuento").val();
 	if(descuento.length>0) {
 		$.post("ventaProducto.php", { txtDescuento: descuento, limpiar : 2},
@@ -215,6 +215,7 @@ function ingresarDescuento() {
 }
 
 function borrarItem(codItem) {
+	
 	$.post("ventaProducto.php", { cdIndice: codItem, limpiar : 3},
 	function(data) {
 		$('#divVenta').html(data);
@@ -236,3 +237,107 @@ function cargarResultadosDivRecibo() {
 		   });
 	}   
 }
+
+function abrirCaja(indice) {
+	$("#divCantidad").show();
+}
+
+//en la funcion al indice se le resta -1
+function cerrarCaja(indice) {
+
+	$("#divCantidad").hide();
+	var nuevoValor = $("#txtCantidad").val();
+
+	$.post("ventaProducto.php", { cdIndice: indice, limpiar : 4, nuevaCantidad: nuevoValor },	
+	function(data) {
+		$('#divVenta').html(data);
+		$('#frmVentaProducto')[0].reset();
+		$('#txtCodigoProducto').focus();
+	});	
+}
+
+
+//USUARIOS: cargar los usuarios en la forma de buscar usuarios
+function cargarUsuariosPaginacion(txtUsuario, pagina) {
+	var usuario = txtUsuario;
+	
+	if(usuario.length>0) {
+		$.post("buscarUsuario.php", { txtUsuario: usuario, pag: pagina},
+		   function(data) {
+			 $('#divResultadosBusquedaUsuario').html(data);
+		   });
+	}   
+}
+
+function cargarResultadosDivUsuarios() {
+	var usuario = $("#txtUsuario").val();
+	
+	if(usuario.length>0) {
+		$.post("buscarUsuario.php", { txtUsuario: usuario},
+		   function(data) {
+			 $('#divResultadosBusquedaUsuario').html(data);
+			 $('#frmBuscarUsuario')[0].reset();
+		   });
+	}   
+}
+
+//funciones para cargar datos de sucursales
+function cargarResultadosDivSucursales() {
+	var sucursal = $("#txtSucursal").val();
+	
+	if(sucursal.length>0) {
+		$.post("buscarSucursal.php", { txtSucursal: sucursal},
+		   function(data) {
+			 $('#divResultadosBusquedaSucursal').html(data);
+			 $('#frmBuscarSucursal')[0].reset();
+		   });
+	}   
+}
+
+
+function cargarSucursalesPaginacion(txtSucursal, pagina) {
+	var sucursal = txtSucursal;
+	
+	if(sucursal.length>0) {
+		$.post("buscarSucursal.php", { txtSucursal: sucursal, pag: pagina},
+		   function(data) {
+			 $('#divResultadosBusquedaSucursal').html(data);
+		   });
+	}   
+}
+
+//estas funciones sirven para la pantalla de ingresar tratamiento
+   function validarTerapia() {
+   
+		var obs = document.getElementById("txtNotasSesion");
+		var texto = obs.value;
+		if(texto == '') {
+			alert('Ingrese las notas de la terapia.');
+			return false;
+		} else {
+			if(texto.length < 800)
+				return true;
+			else {	
+				alert('Ingrese solo 700 caracteres en notas de terapia.');
+				return false;
+			}	
+		}	
+	
+   }
+   
+   function validarMedicacion() {
+		var obs = document.getElementById("txtNotasMedicacion");
+		var texto = obs.value;
+		if(texto == '') {
+			alert('Ingrese la medicación.');
+			return false;
+		} else {
+			if(texto.length < 800)
+				return true;
+			else {
+				alert('Ingrese solo 700 caracteres en notas de medicación.');
+				return false;
+			}
+		}	
+   }
+   

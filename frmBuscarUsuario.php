@@ -1,11 +1,10 @@
-<?php
+<?php 
 require_once("./include/dabejas_config.php");
 
 if(!$autenticacion->CheckLogin()) {
 	$autenticacion->RedirectToURL("login.php");
     exit;
 }
-
 ?>
 <html>
 <head>
@@ -13,22 +12,16 @@ if(!$autenticacion->CheckLogin()) {
 <script>
 $(function() {
   // Initialize form validation on the registration form.
-  $("form[name='frmBuscarPaciente']").validate({
+  $("form[name='frmBuscarUsuario']").validate({
     // Specify validation rules
     rules: {
       // The key name on the left side is the name attribute
       // of an input field. Validation rules are defined
       // on the right side
-      txtApe: {
-		  required: true,
-		  alphanumeric: true
-	  }
+      txtUsuario: "required"
 	},  
     messages: {
-      txtApe: {
-		  required: "requerido",
-		  alphanumeric: "Solo letras y números"
-	  }  
+      txtUsuario: "requerido",
     },
 
     // Make sure the form is submitted to the destination defined
@@ -42,23 +35,23 @@ $(function() {
 </script>
 </head>
 <body>
-<form id="frmBuscarPaciente" name="frmBuscarPaciente" method="post">
+<form id="frmBuscarUsuario" name="frmBuscarUsuario" method="post">
 <div name='divBusqueda'>
 <fieldset>
-<legend>B&#250;squeda de paciente</legend>
-<!--
-<label>Apellidos*</label>
--->
-Buscar por campo: <select id="cmbCam" name="cmbCam"><option value="apellidos_paciente">Apellido</option><option value="cedula_paciente">C&#233;dula</option></select>
-<input name="txtApe" id="txtApe">
-<input class="submit" type="button" value="Buscar Pacientes" id="enviarConsulta" onclick="cargarResultadosDivPacientes();"></input>
+<legend>B&#250;squeda de usuario</legend>
+
+<label>Nombre a buscar*:</label>
+<input type="textbox" id="txtUsuario" name="txtUsuario"></input>
+<input class="submit" type="button" value="Buscar Usuarios" id="enviarConsulta" onclick="cargarResultadosDivUsuarios();">
+(Ingrese % para todos)
 </fieldset>
 </div>
 </form>
 <div>
 <fieldset><legend>Resultados</legend>
-<div id="divResultadosBusquedaPaciente"></div>
+<div id="divResultadosBusquedaUsuario"></div>
 </fieldset>
 </div>
+</form>
 </body>
 </html>

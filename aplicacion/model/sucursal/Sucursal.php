@@ -11,8 +11,13 @@ class Sucursal {
 	function setSucursal($cd_sucursal, $cd_empresa, $nm_sucursal, $direccion_sucursal) {
 		$this->cd_sucursal = $cd_sucursal;
 		$this->cd_empresa = $cd_empresa;
-		$this->nm_sucursal = $nm_sucursal;
+		$this->nm_sucursal = addslashes($nm_sucursal);
 		$this->direccion_sucursal = $direccion_sucursal;
+	}
+	
+	function validarNombreRepetido() {
+		$sql = "select count(1) as conteo from sucursales where nm_sucursal = '" . $this->nm_sucursal . "'";
+		return $sql;
 	}
 	
 	function getCdSucursal() {
@@ -25,6 +30,11 @@ class Sucursal {
 	
 	function getNmSucursal() {
 		return $this->nm_sucursal;
+	}
+	
+	function setNmSucursal($nm_sucursal) {
+		$this->nm_sucursal = $nm_sucursal;
+		
 	}
 	
 	function crearSucursal() {
@@ -67,6 +77,18 @@ class Sucursal {
 	function eliminarSucursal() {
 		$sql = "delete from sucursales where cd_sucursal = " . $this->cd_sucursal;
 		return $sql;
+	}
+	
+	function buscarSucursalesPorNombre($inicio, $fin, $contarTodos) {
+		$sql = "select cd_sucursal, nm_sucursal from sucursales " . 
+			" where nm_sucursal like '%" . $this->nm_sucursal . "%'" . 
+			" order by nm_sucursal";
+			
+		if(!$contarTodos) {
+			$sql .= " limit " . $inicio . ", " . $fin;
+		}
+		//echo $sql;	
+		return $sql;	
 	}
 	
 }

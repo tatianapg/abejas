@@ -24,9 +24,16 @@ class Tratamiento {
         $this->obs_tratamiento = $obs_tratamiento;
         $this->terapias_tratamiento = $terapias_tratamiento;
     }
+	
+	function setDefaultNumeros() {
+		
+		if(!$this->terapias_tratamiento) $this->terapias_tratamiento = 0;
+	}	
     
     function crearTratamiento() {
         
+		$this->setDefaultNumeros();
+		
         $cons = "Insert into Tratamientos(cd_paciente, nm_tratamiento, fe_tratamiento,
         medicacion_tratamiento, obs_tratamiento, terapias_tratamiento) values ( " .
         $this->cd_paciente . ", " .
@@ -40,6 +47,8 @@ class Tratamiento {
     }
     
     function modificarTratamiento() {
+		$this->setDefaultNumeros();
+		
         $cons = " update Tratamientos set " .
         "cd_paciente = '" . $this->cd_paciente . "', " .
         "nm_tratamiento = '" . addslashes($this->nm_tratamiento) . "', " .

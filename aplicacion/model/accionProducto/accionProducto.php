@@ -15,6 +15,7 @@ class AccionProducto {
 	private $cd_subtipo_accion;
 	private $cd_usuario;
 	private $cd_cabecera;
+	private $dato_sensible;
 	
 	//campos para reportes
 	private $fe_reporte_diario_fin;
@@ -24,6 +25,9 @@ class AccionProducto {
 	function __construct() {
 	}
 	
+	function setDatoSensible($dato_sensible) {
+		$this->dato_sensible = $dato_sensible;
+	}
 	
 	function setCdUsuario($cd_usuario) {
 		$this->cd_usuario = $cd_usuario;
@@ -118,7 +122,7 @@ class AccionProducto {
 	/* esta consulta permite obtener todos los movimientos (grupos grandes: compras o ventas) realizados
 	en una fecha, o entre fechas.
 	*/
-	function generarDetalleMovimientos() {
+	function generarDetalleMovimientos($bddSeguridad) {
 		//verificar si existe sucursal
 		$condicionSucursal = "";
 		if($this->cd_sucursal != -1 && $this->cd_sucursal != '')
@@ -145,7 +149,7 @@ class AccionProducto {
 		$sql = "select p.nm_producto, p.sku_producto, a.cantidad_accion cantidad, a.precio_accion as precio, " .
 			   " (a.cantidad_accion * a.precio_accion) as ingreso, a.fe_accion as fe_ultima_compra, " . 
 			   " s.nm_sucursal, t.nm_tipo_accion as nm_subtipo, u.login_usuario, a.cd_cabecera " .
-			   " from acciones_producto a, productos p, sucursales s, tipos_accion t, bdd_seguridades.usuarios u " .
+			   " from acciones_producto a, productos p, sucursales s, tipos_accion t, ". $bddSeguridad.".usuarios u " .
 			   " where " .
 			   //cambio_inventario
 			   $condicionInventario .
@@ -158,7 +162,7 @@ class AccionProducto {
 			   " and a.cd_sucursal = s.cd_sucursal " .
 			   " and a.cd_subtipo_accion = t.cd_tipo_accion " .
 			   " and a.cd_usuario = u.cd_usuario " . 
-			   " order by s.nm_sucursal, a.cd_cabecera, u.login_usuario, a.fe_accion ";		
+			   " order by s.nm_sucursal, a.cd_cabecera, p.nm_producto, u.login_usuario, a.fe_accion ";		
 		
 		//echo "consulta sql: " . $sql;	
 		return $sql;
@@ -243,8 +247,11 @@ class AccionProducto {
 			   " and ap.cd_sucursal = " . $this->cd_sucursal .
 			   " and ap.cd_tipo_accion = 1 " .
 			   " and ap.es_carga_inicial = 1 " .
+  			   " where " .
+			   " a.cd_inventario = " . $this->cd_inventario . 
+			   " and a.cd_sucursal = " . $this->cd_sucursal .
 			   " group by a.cd_producto " .
-			   "order by a.cd_producto";
+			   " order by a.cd_producto";
 		return $sql;
 	}
 	
@@ -253,7 +260,8 @@ class AccionProducto {
 	estas compras no son carga inicial
 	*/		
 	function obtenerComprasStock() {
-		$sql = "select a.cd_producto, sum(ap.cantidad_accion) cantidad_compras, sum(ap.cantidad_accion * ap.precio_accion) as valor_compras " .
+		$sql = "select a.cd_producto, sum(ap.cantidad_accion) cantidad_compras, " .
+			   " sum(ap.cantidad_accion * ap.precio_accion) as valor_compras " .
 			   " from aux_acciones a left outer join acciones_producto ap on a.cd_producto = ap.cd_producto " .
 			   " and a.cd_inventario = ap.cd_inventario " . 
 			   " and a.cd_sucursal = ap.cd_sucursal " .			   
@@ -261,6 +269,9 @@ class AccionProducto {
 			   " and ap.cd_sucursal = " . $this->cd_sucursal .
 			   " and ap.cd_tipo_accion = 1 " .
 			   " and ap.es_carga_inicial = 0 " .
+   			   " where " . 
+			   " a.cd_inventario = " . $this->cd_inventario . 
+			   " and a.cd_sucursal = " . $this->cd_sucursal .
 			   " group by a.cd_producto " .
 			   " order by a.cd_producto";
 		return $sql;
@@ -273,11 +284,14 @@ class AccionProducto {
 		$sql = "select a.cd_producto, sum(ap.cantidad_accion) cantidad_ventas, sum(ap.cantidad_accion * ap.precio_accion) as valor_ventas " .
 			   " from aux_acciones a left outer join acciones_producto ap on a.cd_producto = ap.cd_producto " .
 			   " and a.cd_inventario = ap.cd_inventario " . 
-			   " and a.cd_sucursal = ap.cd_sucursal " .			   			   
+			   " and a.cd_sucursal = ap.cd_sucursal " .		
 			   " and ap.cd_inventario = " . $this->cd_inventario .
 			   " and ap.cd_sucursal = " . $this->cd_sucursal .
 			   " and ap.cd_tipo_accion = 2 " .
 			   " and ap.es_carga_inicial = 0 " .
+			   " where ".
+			   " a.cd_inventario = " . $this->cd_inventario . 
+			   " and a.cd_sucursal = " . $this->cd_sucursal .
 			   " group by a.cd_producto " .
 			   " order by a.cd_producto";
 		return $sql;
@@ -323,9 +337,9 @@ class AccionProducto {
 	function recuperarAccionesDadaCabecera() {
 		
 		$sql = "select p.nm_producto as nombre, p.sku_producto as codigo, a.precio_accion as precio, " .
-				" a.cantidad_accion, a.cd_cabecera " .
+				" a.cantidad_accion as cantidad, a.cd_cabecera " .
 				" from acciones_producto a, productos p " .
-				" where a.cd_cabecera = " . $this->cd_cabecera . 
+				" where a.cd_cabecera = '" . $this->cd_cabecera . "' " .
 				" and a.cd_sucursal = " . $this->cd_sucursal .
 				" and a.cd_producto = p.cd_producto ";	
 		//echo "consultar última venta: " . $sql;
@@ -351,7 +365,7 @@ class AccionProducto {
 	generar una consulta con las devoluciones	
 	*/
 	
-	function generarResumenDiarioVentas() {
+	function generarResumenDiarioVentas($bddSeguridad) {
 		//verificar si existe sucursal
 		$condicionSucursal = "";
 		if($this->cd_sucursal != -1 && $this->cd_sucursal != '')
@@ -377,14 +391,14 @@ class AccionProducto {
 		if($this->fe_reporte_diario_inicio && $this->fe_reporte_diario_fin) {
 			$condicionFechas = " and fe_accion between '" .  $this->fe_reporte_diario_inicio ."' and '" . $this->fe_reporte_diario_fin ."' ";
 		}
-		
+						
 		
 		$sql = "select p.nm_producto, p.sku_producto, sum(a.cantidad_accion) as cantidad, " .
 			   " a.precio_accion as precio, " .
 			   " (sum(a.cantidad_accion) * a.precio_accion) as ingreso, " .
-			   " (sum(a.cantidad_accion) * a.costo_accion) as costo, " .
+			   " ((sum(a.cantidad_accion) * a.costo_accion)* ".$this->dato_sensible.") as costo, " .
 			   " s.nm_sucursal, u.login_usuario " .
-			   " from acciones_producto a, productos p, sucursales s, bdd_seguridades.usuarios u " .
+			   " from acciones_producto a, productos p, sucursales s, ".$bddSeguridad.".usuarios u " .
 			   " where " .
 			   ///cambio_inventario
 			   $condicionInventario .

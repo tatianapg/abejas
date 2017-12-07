@@ -65,7 +65,7 @@ if(!$autenticacion->CheckLogin()) {
 	---------------------------------------------------------------------	
 	*/
 	$pdo = new PdoWrapper();
-	$con = $pdo->pdoConnect("localhost", "tatianag", "Cpsr19770428", "bdd_abejas");
+	$con = $pdo->pdoConnect();
 		
 	//consultar la cabecera
 	$comprobante = new Comprobante();
@@ -74,15 +74,24 @@ if(!$autenticacion->CheckLogin()) {
 	$sql = $comprobante->getComprobante();
 	$result = $pdo->pdoGetRow($sql);
 	$comprobante->obtenerComprobante($result);
+	$subtotal = $comprobante->getTotalComprobante();
 	$descuento = $comprobante->getDescuentoComprobante();	
+	$totalPagar = $comprobante->getAPagarComprobante();
 		
-	//consultar usuario y sucursal
+	//consultar usuario
+	$sql = $pdo->cambiarBdd();
+	$pdo->pdoExecute($sql);
+
 	$usuario = new Usuario();
 	$usuario->setCdUsuario($comprobante->getCdUsuario());
 	$sql = $usuario->consultarUsuario();
 	$res = $pdo->pdoGetRow($sql);
 	$usuario->obtenerUsuario($res);
-			
+	
+	//	consulta sucursal
+	$sql = $pdo->cambiarBddApp();
+	$pdo->pdoExecute($sql);
+	
 	$sucursal = new Sucursal();
 	$sucursal->setCdSucursal($comprobante->getCdSucursal());
 	$sql = $sucursal->consultarSucursal();
@@ -102,37 +111,37 @@ if(!$autenticacion->CheckLogin()) {
 	generar datos para reporte
 	---------------------------------------------------------------------
 */	
+//$_GET["rec"]
 	$tblEntrega ="";
 
 	$tbl = "";	
 	$tbl .= "<table border=\"1\">";	
-	$tbl .= '<tr><td colspan="6"><b>RECIBO DE ENTREGA DE PRODUCTOS No. '.$_GET["rec"].'</b></td></tr>';
+	$tbl .= '<tr><td colspan="5"><b>RECIBO DE ENTREGA DE PRODUCTOS No. '.$comprobante->getCodigoComprobante().'</b></td></tr>';
 	
+	//<td><b>Unidades</b></td>
 	$tbl .= "<tr>";
-	$tbl .= "<td width=\"25\"><b>No.</b></td><td width=\"50\"><b>Código</b></td><td><b>Unidades</b></td>";
-	$tbl .= "<td><b>Precio Unidad($)</b></td><td width=\"153\"><b>Descripción</b></td><td width=\"50\"><b>Total($)</b></td>";
+	$tbl .= "<td width=\"55\"><b>Cantidad</b></td><td width=\"50\"><b>Código</b></td>";
+	$tbl .= "<td width=\"190\"><b>Descripción</b></td>";
+	$tbl .= "<td width=\"73\"><b>P.Unitario($)</b></td><td width=\"50\"><b>Valor($)</b></td>";
 	$tbl .= "</tr>";	
 
-	if(isset($_GET["rec"])) {
-		$subTotal = 0;
+	if(isset($_GET["rec"])) {		
 		$i=1;
 		foreach($resultDetalle as $fila) {
 			$tbl .= "<tr>"; 
-			$tbl .= "<td width=\"25\" align=\"right\">".$i."</td>"; 
+			$tbl .= "<td width=\"55\" align=\"right\">".$fila["cantidad"]."</td>"; 
 			$tbl .= "<td width=\"50\" align=\"right\">".$fila["codigo"]."</td>"; 
-			$tbl .= "<td align=\"right\">1</td>"; 
-			$tbl .= "<td align=\"right\">". number_format($fila["precio"], 2, ".", "") . "</td>"; 
-			$tbl .= "<td width=\"153\">". $fila["nombre"] . "</td>";
-			$tbl .= "<td align=\"right\" width=\"50\">". number_format($fila["precio"], 2, ".", "") . "</td>";
+			$tbl .= "<td width=\"190\">". $fila["nombre"] . "</td>";			
+			$tbl .= "<td width=\"73\" align=\"right\">". number_format($fila["precio"], 2, ".", "") . "</td>"; 
+			$valorFila = $fila["cantidad"] * $fila["precio"];
+			$tbl .= "<td align=\"right\" width=\"50\">". number_format($valorFila, 2, ".", "") . "</td>";
 			$tbl .= "</tr>"; 
-			$subTotal += $fila["precio"]; 
 			$i++;
 		}
-		$tbl .= "<tr><td></td><td></td><td></td><td></td><td><b>SUBTOTAL($):</b></td><td align=\"right\"><b>". number_format($subTotal,2, ".", "")."</b></td></tr>";
-		$tbl .= "<tr><td></td><td></td><td></td><td></td><td><b>DESCUENTO(-):</b></td><td align=\"right\"><b>". number_format($descuento,2, ".", "")."</b></td></tr>";
-		
-		$totalFinal = $subTotal - $descuento;
-		$tbl .= "<tr><td></td><td></td><td></td><td></td><td><b>TOTAL($):</b></td><td align=\"right\"><b>". number_format($totalFinal,2, ".", "")."</b></td></tr>";
+		$tbl .= "<tr><td colspan=\"4\" align=\"right\"><b>SUBTOTAL($):</b></td><td align=\"right\"><b>". number_format($subtotal,2, ".", "")."</b></td></tr>";
+		$tbl .= "<tr><td colspan=\"4\" align=\"right\"><b>DESCUENTO(-):</b></td><td align=\"right\"><b>". number_format($descuento,2, ".", "")."</b></td></tr>";
+				
+		$tbl .= "<tr><td colspan=\"4\" align=\"right\"><b>TOTAL($):</b></td><td align=\"right\"><b>". number_format($totalPagar,2, ".", "")."</b></td></tr>";
 		$tbl .= "</table><p></p>";
 		
 		$tblEntrega .= "<table>";

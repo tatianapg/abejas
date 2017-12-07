@@ -2,19 +2,25 @@
 include("./aplicacion/bdd/PdoWrapper.php");
 include("./aplicacion/controller/Controller.php");
 include("./aplicacion/model/sucursal/Sucursal.php");
+require_once("./include/dabejas_config.php");
 
-//abrir una conexion con la bdd
-$pdo = new PdoWrapper();
-$con = $pdo->pdoConnect("localhost", "tatianag", "Cpsr19770428", "bdd_abejas");
+if(!$autenticacion->CheckLogin()) {
+	$autenticacion->RedirectToURL("login.php");
+    exit;
+} else {
 
-$sucursal = new Sucursal();
-$sql = $sucursal->getTodasSucursales();
-//echo "consulta de textos: " . $sql;
-if($con) {
-	$result = $pdo->pdoGetAll($sql);
-	$combo = construirCombo($result, $sucursal->getCdSucursal());
+	//abrir una conexion con la bdd
+	$pdo = new PdoWrapper();
+	$con = $pdo->pdoConnect();
+
+	$sucursal = new Sucursal();
+	$sql = $sucursal->getTodasSucursales();
+	//echo "consulta de textos: " . $sql;
+	if($con) {
+		$result = $pdo->pdoGetAll($sql);
+		$combo = construirCombo($result, $sucursal->getCdSucursal());
+	}
 }
-
 ?>
 <html>
 <head>
@@ -71,7 +77,7 @@ $(function() {
 <form id="frmReportesInventario" name="frmReportesInventario" method="post" action="reportesPaciente.php" target="_blank">
 <div name='divBusqueda'>
 <fieldset>
-<legend>Reportes de productos</legend>
+<legend>Reportes de pacientes</legend>
 <table>
 <tr><td colspan="6"><b>Parámetros:</b></td></tr>
 <tr><td>Sucursal*</td><td><select class="combo" name="cmbSucursal" id="cmbSucursal">

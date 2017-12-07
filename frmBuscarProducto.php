@@ -1,3 +1,11 @@
+<?php 
+require_once("./include/dabejas_config.php");
+
+if(!$autenticacion->CheckLogin()) {
+	$autenticacion->RedirectToURL("login.php");
+    exit;
+}
+?>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html charset=utf-8"/>
@@ -35,14 +43,14 @@ $(function() {
 <!--
 <label>Texto a buscar*</label>
 -->
-<label>Producto a buscar*</label>
-<!--
+<label>Producto a buscar por: </label>
+
 <select name="cmbCriterio" id="cmbCriterio">
 <option value="nm_producto">Nombre</option>
 <option value="sku_producto">Código</option>
--->
-<input type="textbox" id="txtPro" name="txtPro"></input>
 </select>
+<input type="textbox" id="txtPro" name="txtPro"></input>
+
 <!--
 <input name="txtPro" id="txtPro">
 -->

@@ -12,8 +12,7 @@ if(!$autenticacion->CheckLogin()) {
 
 	//abrir una conexion con la bdd
 	$pdo = new PdoWrapper();
-	$con = $pdo->pdoConnect("localhost", "tatianag", "Cpsr19770428", "bdd_abejas");
-
+	$con = $pdo->pdoConnect();
 
 	//ver si existe un inventario activo
 	$inventario = new Inventario();
@@ -29,13 +28,8 @@ if(!$autenticacion->CheckLogin()) {
 		$fila = $pdo->pdoGetRow($sql);
 		$inventario->obtenerInventario($fila);
 		$nombreInventario = $inventario->getNmInventario();
-	}
-	
-	//obtener el tipo de acción: venta
-	$tipoAccion = "2";
-	$subTipo = "5";
-		
-	///
+	}	
+			
 	if(!isset($_SESSION["lista_productos"]))
 		$i = 0;
 	else
@@ -45,7 +39,6 @@ if(!$autenticacion->CheckLogin()) {
 	if(isset($_POST["txtCodigoProducto"]))
 		$_SESSION["lista_productos"][$i] = $_POST["txtCodigoProducto"];
 	
-	/////
 }
 
 
@@ -56,14 +49,10 @@ if(!$autenticacion->CheckLogin()) {
 <script>
 $(function() {
   $("#txtCodigoProducto").focus();
- 
 });
 </script>
 </head>
 <body>
-<!--
-<form id="frmVentaProducto" name="frmVentaProducto" method="post" action="frmVentaProducto.php">
--->
 <form id="frmVentaProducto" name="frmVentaProducto" method="post">
 
 <div name='divBusqueda'>
@@ -95,9 +84,6 @@ $(function() {
 <table>
 <tr>
 <td>Descuento</td><td align="left"><input class="cajaCortaNumeros" id="txtDescuento" value="0" name="txtDescuento"></input>
-<!--
-<label><input class="checkbox" type="checkbox" id="chkAplicar" name="chkAplicar" value="si" onchange="ingresarDescuento();" />Aplicar</label>
--->
 <a href="#" onclick="ingresarDescuento();">[Aplicar]</a>
 </td>
 

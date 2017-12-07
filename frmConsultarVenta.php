@@ -1,5 +1,12 @@
 <?php
 include("./aplicacion/controller/Controller.php");
+require_once("./include/dabejas_config.php");
+
+if(!$autenticacion->CheckLogin()) {
+	$autenticacion->RedirectToURL("login.php");
+    exit;
+}
+
 ?>
 <html>
 <head>

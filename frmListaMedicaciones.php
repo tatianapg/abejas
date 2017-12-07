@@ -1,21 +1,27 @@
 <?php
-//echo ("hola "  . $_GET["cdtra"]);
 include("./aplicacion/controller/Controller.php");
 include("./aplicacion/bdd/PdoWrapper.php");
 include("./aplicacion/model/tratamiento/Tratamiento.php");
+require_once("./include/dabejas_config.php");
 
-$pdo = new PdoWrapper();
-$con = $pdo->pdoConnect("localhost", "tatianag", "Cpsr19770428", "bdd_abejas");
+if(!$autenticacion->CheckLogin()) {
+	$autenticacion->RedirectToURL("login.php");
+    exit;
+} else {
 
-$tratamiento = new Tratamiento();
-$tratamiento->setCdTratamiento($_GET["cdtra"]);
-$sqlTratamiento = $tratamiento->consultarTratamientoPorCd($_GET["cdtra"]);
-$fila = $pdo->pdoGetRow($sqlTratamiento);
-$tratamiento->obtenerTratamiento($fila);
+	$pdo = new PdoWrapper();
+	$con = $pdo->pdoConnect();
 
-//luego hacer la consulta
-$sql = $tratamiento->getDatosMedicacionesdeTratamiento();
-//echo "consulta de medicaciones de tratamiento:  " . $sql;
+	$tratamiento = new Tratamiento();
+	$tratamiento->setCdTratamiento($_GET["cdtra"]);
+	$sqlTratamiento = $tratamiento->consultarTratamientoPorCd($_GET["cdtra"]);
+	$fila = $pdo->pdoGetRow($sqlTratamiento);
+	$tratamiento->obtenerTratamiento($fila);
+
+	//luego hacer la consulta
+	$sql = $tratamiento->getDatosMedicacionesdeTratamiento();
+
+}
 ?>
 
 <html>

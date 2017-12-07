@@ -23,7 +23,7 @@ if(!$autenticacion->CheckLogin()) {
 } else {
 ////////////////////////////
 	$pdo = new PdoWrapper();
-	$con = $pdo->pdoConnect("localhost", "tatianag", "Cpsr19770428", "bdd_abejas");
+	$con = $pdo->pdoConnect();
 
 	$txtCdRecibo = "";
 
@@ -40,14 +40,22 @@ if(!$autenticacion->CheckLogin()) {
 			$sql = $comprobante->getComprobante();		
 			$res = $pdo->pdoGetRow($sql);
 			$comprobante->obtenerComprobante($res);
-			
+
 			if($res) {
 				//solo si existe el comprobante se hacen consultas de usuario y sucursal
+				//cambiar la base de datos para validar usuario
+				$sql = $pdo->cambiarBdd();
+				$pdo->pdoExecute($sql);
+
 				$usuario = new Usuario();
 				$usuario->setCdUsuario($comprobante->getCdUsuario());
 				$sql = $usuario->consultarUsuario();
 				$res = $pdo->pdoGetRow($sql);
 				$usuario->obtenerUsuario($res);
+
+				//cambiar a base de app
+				$sql = $pdo->cambiarBddApp();
+				$pdo->pdoExecute($sql);
 				
 				$sucursal = new Sucursal();
 				$sucursal->setCdSucursal($comprobante->getCdSucursal());
@@ -69,12 +77,14 @@ if(!$autenticacion->CheckLogin()) {
 				$result = $pdo->pdoGetRow($sql);
 				//echo "\nConsulta de detalle: " . $sql;
 				$comprobante->obtenerComprobante($result);
+				$subtotal = $comprobante->getTotalComprobante();
+				$descuento = $comprobante->getDescuentoComprobante();	
+				$totalPagar = $comprobante->getAPagarComprobante();
 					
-				$i=0;
-				$subtotal = 0;
+				$i=0;				
 
 				$tabla = "<table cellpadding=\"1\">";
-				$tabla .= "<tr><td align=\"center\" colspan=\"3\"><h3>Recibo No. ".$txtCdRecibo."</h3></td></tr>";
+				$tabla .= "<tr><td align=\"center\" colspan=\"3\"><h3>Recibo No. ".$comprobante->getCodigoComprobante()."</h3></td></tr>";
 				$tabla .= "<tr>";
 				$tabla .= "<td><b>Cliente:</b> ". $comprobante->getNmCliente() ."</td><td></td>";
 				$tabla .= "<td><b>Fecha compra:</b> ".$comprobante->getFeComprobante() ."</td>";
@@ -86,30 +96,29 @@ if(!$autenticacion->CheckLogin()) {
 				$tabla .= "<tr><td colspan=\"2\"></td></tr>";
 				
 				$tabla .= "<table>";
-				$tabla .= "<tr><td><b>No.</b></td><td><b>Código</b></td><td><b>Descripción</b></td>";
-				$tabla .= "<td><b>Precio($)</b></td><td><b>Cantidad(u)</b></td></tr>";
+				$tabla .= "<tr><td><b>Cantidad</b></td><td><b>Código</b></td><td><b>Descripción</b></td>";
+				$tabla .= "<td><b>P.Unitario($)</b></td><td><b>Valor($)</b></td></tr>";
 				foreach($resultDetalle as $fila) {
 					$i++;
 					$tabla .= "<tr>";
-					$tabla .= "<td>".$i."</td>";
+					$tabla .= "<td>".$fila["cantidad"]."</td>";
 					$tabla .= "<td>".$fila["codigo"]."</td>";
 					$tabla .= "<td>".$fila["nombre"]."</td>";
 					$tabla .= "<td align=\"right\">". number_format($fila["precio"], 2, '.', '')."</td>";
-					$tabla .= "<td align=\"right\">1</td>";
+					$valorFila = $fila["precio"] * $fila["cantidad"];
+					$tabla .= "<td align=\"right\">".number_format($valorFila, 2, '.', '')."</td>";
 					$tabla .= "</tr>";
-					$subtotal += $fila["precio"];
+					
 				} //fin del foreach 				
 
 				//imprimir el subtotal
-				$tabla .= "<tr><td align=\"right\" colspan=\"3\"><b>SUB-TOTAL($)</b></td><td align=\"right\"><b>".number_format($subtotal, 2, '.','')."</b></td><td></td></tr>";
+				$tabla .= "<tr><td align=\"right\" colspan=\"4\"><b>SUB-TOTAL($)</b></td><td align=\"right\"><b>".number_format($subtotal, 2, '.','')."</b></td><td></td></tr>";
 						
-				//imprimir el descuento				
-				$descuento = $comprobante->getDescuentoComprobante();
-				$tabla .= "<tr><td></td><td></td><td align=\"right\"><b>DESCUENTO(-)</b></td><td align=\"right\"><b>". number_format($descuento, 2, '.', '') ."</b></td></tr>";			
+				//imprimir el descuento								
+				$tabla .= "<tr><td align=\"right\" colspan=\"4\"><b>DESCUENTO(-)</b></td><td align=\"right\"><b>". number_format($descuento, 2, '.', '') ."</b></td></tr>";			
 					
-				//imprimir el total 
-				$totalFinal = $subtotal - $descuento;
-				$tabla .= "<tr><td align=\"right\" colspan=\"3\"><h2>TOTAL($)</h2></td><td align=\"right\"><h2>".number_format($totalFinal, 2, '.','')."</h2></td><td align=\"right\"><h1></h1></td></tr>";
+				//imprimir el total 				
+				$tabla .= "<tr><td align=\"right\" colspan=\"4\"><h2>TOTAL($)</h2></td><td align=\"right\"><h2>".number_format($totalPagar, 2, '.','')."</h2></td><td align=\"right\"><h1></h1></td></tr>";
 			
 				echo($tabla);							
 			} // fin res

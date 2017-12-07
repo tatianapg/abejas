@@ -1,7 +1,6 @@
 <?php
 include("./aplicacion/bdd/PdoWrapper.php");
 include("./aplicacion/model/sucursal/Sucursal.php");
-include("./include/autenticacion.php");
 require_once("./include/dabejas_config.php");
 
 if(!$autenticacion->CheckLogin()) {
@@ -10,13 +9,12 @@ if(!$autenticacion->CheckLogin()) {
 } else {
 	
 	$pdo = new PdoWrapper();
-	$con = $pdo->pdoConnect("localhost", "tatianag", "Cpsr19770428", "bdd_abejas");
+	$con = $pdo->pdoConnect();
 
 	$codigo = $_POST['cmbSucursal'];
 
 	$cdUsuario = (isset($_SESSION['cd_usuario']) ? $_SESSION['cd_usuario'] : 0);
-	echo "el codigo del usuario es: " . $cdUsuario;
-
+	//echo "el codigo del usuario es: " . $cdUsuario;
 
 	$sucursal = new Sucursal();
 	$sucursal->setCdSucursal($codigo);

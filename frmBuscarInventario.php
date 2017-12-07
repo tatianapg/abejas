@@ -1,3 +1,12 @@
+<?php 
+require_once("./include/dabejas_config.php");
+
+if(!$autenticacion->CheckLogin()) {
+	$autenticacion->RedirectToURL("login.php");
+    exit;
+} 
+
+?>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html charset=utf-8"/>
@@ -33,6 +42,7 @@ $(function() {
 <legend>B&#250;squeda de inventario</legend>
 <label>A&#241;o del inventario*</label><input name="txtAnioBuscar" id="txtAnioBuscar">
 <input class="submit" type="button" value="Buscar Inventarios" id="enviarConsulta" onclick="cargarResultadosDivInventarios();">
+<label>(Ingrese 1 para buscar todos)</label>
 </fieldset>
 </div>
 </form>

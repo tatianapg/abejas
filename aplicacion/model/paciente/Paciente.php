@@ -340,7 +340,8 @@ class Paciente {
     
     //buscar pacientes por el nombre
     function buscarPacientesPorApellidos($inicio, $fin, $contarTodos) {
-        $sql = "select cd_paciente, apellidos_paciente, nombres_paciente, cedula_paciente, sexo_paciente from pacientes where " . $this->getCampoBuscar() ." like '%" . $this->apellidos_paciente . "%' order by apellidos_paciente, nombres_paciente " ;
+        $sql = "select cd_paciente, apellidos_paciente, nombres_paciente, cedula_paciente, sexo_paciente " .
+				" from pacientes where " . $this->getCampoBuscar() ." like '%" . $this->apellidos_paciente . "%' order by apellidos_paciente, nombres_paciente " ;
 		if(!$contarTodos) {
 			$sql .= " limit " . $inicio . ", " . $fin;
 		}
